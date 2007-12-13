@@ -22,7 +22,7 @@ namespace pruebaImplementaciones
             this.pasos = new Bitmap[totalPasos];
 
             this.huella = new Bitmap(huella);
-            this.matriz = Adaptador.Adaptar(huella);
+            this.matriz = Adaptador.Adaptar(this.huella);
             this.atr = atr;
 
             this.filas = huella.Width;
@@ -192,11 +192,6 @@ namespace pruebaImplementaciones
                 b = true;
 
             return b;
-        }
-
-        public Bitmap getBitmapFinal()
-        {
-            return pasos[busquedaBifurcaciones];
         }
 
         public Bitmap[] getPasos()
