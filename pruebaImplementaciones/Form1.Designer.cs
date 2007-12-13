@@ -35,6 +35,8 @@
             this.reset = new System.Windows.Forms.Button();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.trackBar = new System.Windows.Forms.TrackBar();
+            this.siguiente = new System.Windows.Forms.Button();
+            this.anterior = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             this.SuspendLayout();
@@ -95,11 +97,33 @@
             this.trackBar.TabIndex = 4;
             this.trackBar.ValueChanged += new System.EventHandler(this.trackBar_ValueChanged);
             // 
+            // siguiente
+            // 
+            this.siguiente.Location = new System.Drawing.Point(511, 617);
+            this.siguiente.Name = "siguiente";
+            this.siguiente.Size = new System.Drawing.Size(33, 23);
+            this.siguiente.TabIndex = 5;
+            this.siguiente.Text = ">";
+            this.siguiente.UseVisualStyleBackColor = true;
+            this.siguiente.Click += new System.EventHandler(this.siguiente_Click);
+            // 
+            // anterior
+            // 
+            this.anterior.Location = new System.Drawing.Point(32, 617);
+            this.anterior.Name = "anterior";
+            this.anterior.Size = new System.Drawing.Size(33, 23);
+            this.anterior.TabIndex = 6;
+            this.anterior.Text = "<";
+            this.anterior.UseVisualStyleBackColor = true;
+            this.anterior.Click += new System.EventHandler(this.anterior_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(568, 663);
+            this.Controls.Add(this.anterior);
+            this.Controls.Add(this.siguiente);
             this.Controls.Add(this.trackBar);
             this.Controls.Add(this.reset);
             this.Controls.Add(this.ejecutar);
@@ -126,6 +150,8 @@
         private System.Windows.Forms.Button reset;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.TrackBar trackBar;
+        private System.Windows.Forms.Button siguiente;
+        private System.Windows.Forms.Button anterior;
     }
 }
 
