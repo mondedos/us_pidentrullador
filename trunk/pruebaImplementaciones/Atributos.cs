@@ -15,6 +15,7 @@ namespace pruebaImplementaciones
         public Color colorMinuciaNoFiable;
 
         //atributos para el descriptor de textura
+        public int longitudLinea;
         public int[] radiosL;
         public int[] puntosK;
         public double w;
