@@ -150,5 +150,18 @@ namespace pruebaImplementaciones
         {
             pictureBox.Image = pasos[trackBar.Value];
         }
+
+        private void anterior_Click(object sender, EventArgs e)
+        {
+            if (trackBar.Value > trackBar.Minimum)
+                trackBar.Value--;
+        }
+
+        private void siguiente_Click(object sender, EventArgs e)
+        {
+            if (trackBar.Value < trackBar.Maximum)
+                trackBar.Value++;
+
+        }
     }
 }
