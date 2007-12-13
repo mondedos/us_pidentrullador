@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using kernel;
 
 //RENOVAR CON LA NUEVA 
 using AForge.Imaging.Filters;
@@ -106,7 +107,7 @@ namespace pruebaImplementaciones
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
 
-            Atributos atr = new Atributos();
+            Atributos atr = Atributos.getInstance();
             atr.colorMinuciaFiable = Color.Blue;
             atr.colorMinuciaPocoFiable = Color.Red;
             atr.colorMinuciaNoFiable = Color.Green;
