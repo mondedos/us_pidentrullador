@@ -48,15 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adaptador.cs" />
-    <Compile Include="Atributos.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="IMinucia.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -82,11 +79,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Funcion.cs" />
-    <Compile Include="Tratamiento.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\huella.GIF" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\kernel\kernel.csproj">
+      <Project>{F383E926-57AA-45FD-BBB7-0C05F05CC7E4}</Project>
+      <Name>kernel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
