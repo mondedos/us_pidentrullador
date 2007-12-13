@@ -9,8 +9,13 @@ namespace kernel
         public int x = 0, y = 0;
         double angulo = 0.0;
 
+        Fiabilidad clasificacion = Fiabilidad.NoFiable;
         Circulo[] circulos = null;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x">i filas</param>
+        /// <param name="y">j columnas</param>
         public Minucia(int x, int y)
         {
             Atributos atr = Atributos.getInstance();
@@ -19,8 +24,15 @@ namespace kernel
             this.y = y;
 
             //calcular angulo
+            angulo = Math.Asin(y, Math.Sqrt(x * x + y * y));
 
             circulos = new Circulo[atr.radiosL.Length];
         }
+    }
+    public enum Fiabilidad
+    {
+        NoFiable,
+        Fiable,
+        PocoFiable        
     }
 }
