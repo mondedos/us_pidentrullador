@@ -4,7 +4,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>6214bf17-1250-4f22-94ea-35a806c5a430</ProjectGuid>
+    <ProjectGuid>{24079408-8C14-4152-947D-AF7AF80C722A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PruebasUnit</RootNamespace>
