@@ -17,6 +17,8 @@ namespace pruebaImplementaciones
         //o desde un archivo
         Bitmap imagenOriginal;
 
+        Bitmap[] pasos;
+
         public Form1()
         {
             InitializeComponent();
@@ -56,6 +58,10 @@ namespace pruebaImplementaciones
                 //Antes se binariza (por si no es realmente binaria)
                 imagenOriginal = Binarizar(imagenOriginal);
 
+                //La barra se pone a 0
+                trackBar.Value = 0;
+                trackBar.Maximum = 0;
+
                 //Se muestra en el cuadro de imagen
                 pictureBox.Image = imagenOriginal;
             }
@@ -69,24 +75,12 @@ namespace pruebaImplementaciones
         //imagen original
         private void reset_Click(object sender, EventArgs e)
         {
+            //La barra se pone a 0
+            trackBar.Value = 0;
+            trackBar.Maximum = 0;
+
+            //Se muestra la imagen original
             pictureBox.Image = imagenOriginal;
-        }
-
-        //Al hacer click sobre el botón de ejecutar se muestra
-        //la imagen modificada
-        private void ejecutar_Click(object sender, EventArgs e)
-        {
-            Atributos atr = new Atributos();
-            atr.colorMinuciaFiable = Color.Blue;
-            atr.colorMinuciaPocoFiable = Color.Red;
-            atr.colorMinuciaNoFiable = Color.Green;
-            atr.radioCirculo = 8;
-            atr.radiosL = new int[]{27,45,63,81};
-            atr.puntosK = new int[]{10,16,22,28};
-            atr.w = 0.5;
-
-            Tratamiento trat = new Tratamiento(imagenOriginal, atr);
-            pictureBox.Image = trat.getBitmapFinal();
         }
 
         //Al CARGAR la imagen desde archivo se pierde algo de 
@@ -96,6 +90,65 @@ namespace pruebaImplementaciones
             Threshold ts = new Threshold();
             ts.ThresholdValue = 128;
             return ts.Apply(imagen);
+        }
+
+        //Al hacer click sobre el botón de ejecutar se muestra
+        //la imagen modificada
+        private void ejecutar_Click(object sender, EventArgs e)
+        {
+            ejecutar.Enabled = false;
+
+            //El algoritmo se ejecuta en segundo plano
+            backgroundWorker.RunWorkerAsync();
+        }
+
+        //Funcion que se realiza en segundo plano
+        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+            Atributos atr = new Atributos();
+            atr.colorMinuciaFiable = Color.Blue;
+            atr.colorMinuciaPocoFiable = Color.Red;
+            atr.colorMinuciaNoFiable = Color.Green;
+            atr.radioCirculo = 8;
+            atr.radiosL = new int[] { 27, 45, 63, 81 };
+            atr.puntosK = new int[] { 10, 16, 22, 28 };
+            atr.w = 0.5;
+
+            Tratamiento trat = new Tratamiento(imagenOriginal, atr);
+
+            Bitmap[] vector = trat.getPasos();
+            inicializarPasos(vector);
+        }
+
+        private void inicializarPasos(Bitmap[] vector)
+        {
+            //Los pasos incluyen la imagen original
+            pasos = new Bitmap[vector.Length + 1];
+
+            pasos[0] = imagenOriginal;
+
+            //El resto de pasos son los del algoritmo
+            for (int i = 0; i < vector.Length; i++)
+                pasos[i + 1] = vector[i];
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            ejecutar.Enabled = true;
+
+            //El tamaño de la barra es el numero de pasos,
+            //ademas, al principio es 0
+            trackBar.Maximum = pasos.Length-1;
+            trackBar.Value = 0;
+
+            //La imagen que se muestra es la original
+            pictureBox.Image = pasos[0];
+        }
+
+        private void trackBar_ValueChanged(object sender, EventArgs e)
+        {
+            pictureBox.Image = pasos[trackBar.Value];
         }
     }
 }
