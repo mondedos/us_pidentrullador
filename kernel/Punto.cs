@@ -4,7 +4,10 @@ using System.Text;
 
 namespace kernel
 {
-    public class Class1
+    public class Punto
     {
+        int x = 0, y = 0;
+
+        bool esValido = true;
     }
 }
