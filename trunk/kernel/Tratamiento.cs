@@ -76,7 +76,7 @@ namespace kernel
                 for (j = 1; j < cols - 1; j++)
                 {
                     if (matriz[i, j] == 1 && buscarEnEntorno(i, j, matriz, 4)
-                        && numCompConexTres(i,j,matriz))
+                        && numCompConexIgual(i,j,matriz,3))
                     {
                         g.DrawEllipse(new Pen(Color.Red),
                             i - atr.radioCirculo / 2, j - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
@@ -92,7 +92,7 @@ namespace kernel
         /// <param name="y"></param>
         /// <param name="matriz"></param>
         /// <returns></returns>
-        bool numCompConexTres(int x, int y, int[,] matriz)
+        bool numCompConexIgual(int x, int y, int[,] matriz, int numCompConexas)
         {
             int[,] nuevo = new int[,]{ { matriz[x-1,y-1], matriz[x-1,y], matriz[x-1,y+1]},
                                        { matriz[x,y-1], 0, matriz[x,y+1]},
@@ -122,12 +122,17 @@ namespace kernel
                         {
                             if (nuevo[i, j - 1] == 1)
                                 etiquetas[i, j] = etiquetas[i, j - 1];
+                            else
+                                etiquetas[i, j] = contEtiqueta++;
 
                         }
+
                         else if (j == 0 && i > 0)
                         {
                             if (nuevo[i - 1, j] == 1)
                                 etiquetas[i, j] = etiquetas[i - 1, j];
+                            else
+                                etiquetas[i, j] = contEtiqueta++;
                         }
 
                         else if (i > 0)
@@ -158,39 +163,48 @@ namespace kernel
                 }
             }
 
-            foreach (Point p in listaPuntos)
+            /*
+            Console.WriteLine("Minucia " + x + "," + y + ":");
+            for (i = 0; i < 3; i++)
             {
-                for (i = 0; i < 3; i++)
+                for (j = 0; j < 3; j++)
                 {
-                    for (j = 0; j < 3; j++)
-                    {
-                        if (etiquetas[i, j] == p.Y)
-                            etiquetas[i, j] = p.X;
-                    }
+                    Console.Write(nuevo[i, j] + ",");
                 }
+                Console.Write("\n");
             }
+            Console.Write("\n");
+            for (i = 0; i < 3; i++)
+            {
+                for (j = 0; j < 3; j++)
+                {
+                    Console.Write(etiquetas[i,j] + ",");
+                }
+                Console.Write("\n");
+            }
+            Console.WriteLine("-------------");
+            */
 
-            int[] vector = new int[] { 0,0,0,0,0,0,0,0,0,0 };
+            int[] vector = new int[contEtiqueta];
 
             for (i = 0; i < 3; i++)
             {
                 for (j = 0; j < 3; j++)
                 {
-                    if (nuevo[i,j]==1)
-                        vector[etiquetas[i,j]]++;
+                    if (etiquetas[i,j]>=1)
+                        vector[etiquetas[i, j]-1]++;   
                 }
             }
 
-            int contador = 0;
-            for (i = 0; i < vector.Length; i++)
+            int compConexas = 0;
+
+            for (i = 0; i < contEtiqueta; i++)
             {
                 if (vector[i] > 0)
-                    contador++;
+                    compConexas++; ;
             }
 
-            Console.WriteLine("Minucia " + x + "," + y + "; componentes:" + contador);
-
-            return contador == 3;
+            return compConexas == numCompConexas;
         }
         /// <summary>
         /// dado un punto devuelve el numero de pixeles negros de su entrorno
