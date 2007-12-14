@@ -83,6 +83,12 @@ namespace kernel
             this.pasos[guardaBifurcaciones] = new Bitmap(huella);
             Graphics g = Graphics.FromImage(pasos[guardaBifurcaciones]);
             Atributos atr = Atributos.getInstance();
+
+            foreach (Point bifurcacion in bifurcacionesFiables)
+            {
+                g.DrawEllipse(new Pen(atr.colorBifurcacionFiable),
+                    bifurcacion.X - atr.radioCirculo / 2, bifurcacion.Y - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
+            }
         }
 
         /// <summary>
@@ -165,21 +171,40 @@ namespace kernel
                 bool fiable = true;
                 Point[] prolongaciones = bp.prolongaciones;
 
-                Point prolongacionMedia = hallarProlongacionMedia(prolongaciones);
+                int gradiente1 = direcciones[prolongaciones[0].X - bp.actual.X + 1, prolongaciones[0].Y - bp.actual.Y + 1];
+                int gradiente2 = direcciones[prolongaciones[1].X - bp.actual.X + 1, prolongaciones[1].Y - bp.actual.Y + 1];
+                int gradiente3 = direcciones[prolongaciones[2].X - bp.actual.X + 1, prolongaciones[2].Y - bp.actual.Y + 1];
 
-                int gradiente = direcciones[prolongacionMedia.X - bp.actual.X + 1, prolongacionMedia.Y - bp.actual.Y + 1];
-                Point[] cercanos = PuntosCercanosDeOtraLinea(bp.actual, gradiente);
+                Point[] cercanos1 = PuntosCercanosDeOtraLinea(bp.actual, gradiente1);
+                Point[] cercanos2 = PuntosCercanosDeOtraLinea(bp.actual, gradiente2);
+                Point[] cercanos3 = PuntosCercanosDeOtraLinea(bp.actual, gradiente3);
 
-                Point cercano1 = cercanos[0];
-                Point cercano2 = cercanos[1];
+                Point cercanoTemp1 = puntoError;
+                Point cercanoTemp2 = puntoError;
 
-                if (cercano1 != puntoError && cercano2 != puntoError)
+                if (cercanos1[0] != puntoError && cercanos1[1] != puntoError)
                 {
-                    g.DrawLine(new Pen(atr.colorLinea), bp.actual, cercano1);
-                    g.DrawLine(new Pen(atr.colorLinea), bp.actual, cercano2);
+                    cercanoTemp1 = cercanos1[0];
+                    cercanoTemp2 = cercanos1[1];
+                }
+                else if (cercanos2[0] != puntoError &&  cercanos2[1] != puntoError)
+                {
+                    cercanoTemp1 = cercanos2[0];
+                    cercanoTemp2 = cercanos2[1];
+                }
+                else if (cercanos3[0] != puntoError && cercanos3[1] != puntoError)
+                {
+                    cercanoTemp1 = cercanos3[0];
+                    cercanoTemp2 = cercanos3[1];
+                }
+
+                if (cercanoTemp1 != puntoError && cercanoTemp2 != puntoError)
+                {
+                    g.DrawLine(new Pen(atr.colorLinea), bp.actual, cercanoTemp1);
+                    g.DrawLine(new Pen(atr.colorLinea), bp.actual, cercanoTemp2);
                     
-                    Point[] unidos1 = buscaUnidos(cercano1);
-                    Point[] unidos2 = buscaUnidos(cercano2);
+                    Point[] unidos1 = buscaUnidos(cercanoTemp1);
+                    Point[] unidos2 = buscaUnidos(cercanoTemp2);
                     
                     bool prol0 = false, prol1 = false, prol2 = false, prol3 = false, prol4 = false, prol5 = false, prol6 = false;
 
@@ -192,19 +217,19 @@ namespace kernel
                     if (seProlongaSuficiente(bp.actual, prolongaciones[2], atr.longitudLinea, g))
                         prol2 = true;
 
-                    if (unidos1[0] != puntoError && seProlongaSuficiente(cercano1, unidos1[0], atr.longitudLinea, g))
+                    if (unidos1[0] != puntoError && seProlongaSuficiente(cercanoTemp1, unidos1[0], atr.longitudLinea, g))
                         prol3 = true;
 
-                    if (unidos1[1] != puntoError && seProlongaSuficiente(cercano1, unidos1[1], atr.longitudLinea, g))
+                    if (unidos1[1] != puntoError && seProlongaSuficiente(cercanoTemp1, unidos1[1], atr.longitudLinea, g))
                         prol4 = true;
 
-                    if (unidos2[0] != puntoError && seProlongaSuficiente(cercano2, unidos2[0], atr.longitudLinea, g))
+                    if (unidos2[0] != puntoError && seProlongaSuficiente(cercanoTemp2, unidos2[0], atr.longitudLinea, g))
                         prol5 = true;
 
-                    if (unidos2[1] != puntoError && seProlongaSuficiente(cercano2, unidos2[1], atr.longitudLinea, g))
+                    if (unidos2[1] != puntoError && seProlongaSuficiente(cercanoTemp2, unidos2[1], atr.longitudLinea, g))
                         prol6 = true;
 
-                    if (prol0 && prol1 && prol2)// && prol3 && prol4 && prol5 && prol6)
+                    if (prol0 && prol1 && prol2 && prol3 && prol4 && prol5 && prol6)
                     {
                         bifurcacionesFiables.Add(bp.actual);
                         g.DrawEllipse(new Pen(atr.colorBifurcacionFiable),
@@ -224,14 +249,6 @@ namespace kernel
                             bp.actual.X - atr.radioCirculo / 2, bp.actual.Y - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
                 }
             }
-        }
-
-        Point hallarProlongacionMedia(Point[] prolongaciones)
-        {
-            return new Point(
-                (prolongaciones[0].X + prolongaciones[1].X + prolongaciones[2].X) / 3,
-                (prolongaciones[0].Y + prolongaciones[2].Y + prolongaciones[2].Y) / 3
-                );
         }
 
         Point[] buscaUnidos(Point actual)
