@@ -13,12 +13,22 @@ namespace kernel
         Bitmap[] pasos;
         int filas, cols;
 
+        static int[,] direcciones = { { 3, 2, 1 },
+                                      { 4, 9, 0 }, 
+                                      { 5, 6, 7 } };
+
         /// <summary>
         /// Estos atributos se utilizan para indexar los pasos
         /// </summary>
         static int busquedaTerminaciones = 0;
-        static int busquedaBifurcaciones = 1;
-        static int totalPasos = 2;
+        static int compruebaTerminaciones = 1;
+        static int busquedaBifurcaciones = 2;
+        static int compruebaBifurcaciones = 3;
+        static int totalPasos = 4;
+
+        List<TerminacionPotencial> terminacionesPotenciales = new List<TerminacionPotencial>();
+        List<BifurcacionPotencial> bifurcacionesPotenciales = new List<BifurcacionPotencial>();
+
         /// <summary>
         /// Aplica los agoritmos de busqueda de terminaciones y bifurcaciones
         /// a una huella, con los atributos dados por el ususuario.
@@ -37,8 +47,127 @@ namespace kernel
             this.cols = huella.Height;
 
             buscarTerminaciones();
+            comprobarTerminaciones();
+
             buscarBifurcaciones();
+            comprobarBifurcaciones();
         }
+
+        /// <summary>
+        /// Comprueba que las terminaciones encontradas son correctas
+        /// </summary>
+        void comprobarTerminaciones()
+        {
+            this.pasos[compruebaTerminaciones] = new Bitmap(huella);
+            Graphics g = Graphics.FromImage(pasos[compruebaTerminaciones]);
+            Atributos atr = Atributos.getInstance();
+
+            foreach (TerminacionPotencial tp in terminacionesPotenciales)
+            {
+                // Terminación fiable
+                if (seProlongaSuficiente(tp.actual, tp.prolongacion, atr.longitudLinea, g))
+                {
+
+                    int gradiente = direcciones[tp.prolongacion.X - tp.actual.X + 1, tp.prolongacion.Y - tp.actual.Y + 1];
+                    int ngra1=0, ngra2=0;
+
+                    switch (gradiente)
+                    {
+                        case 0: ngra1 = 0; ngra2 = 0; break;
+                        case 1: ngra1 = 0; ngra2 = 0; break;
+                        case 2: ngra1 = 0; ngra2 = 0; break;
+                        case 3: ngra1 = 0; ngra2 = 0; break;
+                        case 4: ngra1 = 0; ngra2 = 0; break;
+                        case 5: ngra1 = 0; ngra2 = 0; break;
+                        case 6: ngra1 = 0; ngra2 = 0; break;
+                        case 7: ngra1 = 0; ngra2 = 0; break;
+                        case 8: ngra1 = 0; ngra2 = 0; break;
+                    }
+
+                    g.DrawEllipse(new Pen(atr.colorTerminacionFiable),
+                            tp.actual.X - atr.radioCirculo / 2, tp.actual.Y - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
+                }
+
+                // Si no es un borde pero no se comprueba su continuidad es poco fiable
+                else
+                {
+                    g.DrawRectangle(new Pen(atr.colorTerminacionPocoFiable),
+                            tp.actual.X - atr.radioCirculo / 2, tp.actual.Y - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
+                }
+            }
+ 
+        }
+
+        bool seProlongaSuficiente(Point actual, Point prolongacion, int longitudLinea, Graphics g)
+        {
+            bool dev = false ;
+
+            if (seSaleDeCoordenadas(prolongacion))
+            {
+                dev = false;
+            }
+            else if (longitudLinea > 0)
+            {
+                int x = prolongacion.X;
+                int y = prolongacion.Y;
+
+                int[,] nuevo = new int[,]{ { matriz[x-1,y-1], matriz[x-1,y], matriz[x-1,y+1]},
+                                           { matriz[x,y-1], 0, matriz[x,y+1]},
+                                           { matriz[x+1,y-1], matriz[x+1,y], matriz[x+1,y+1]} };
+
+                int difX = actual.X - prolongacion.X + 1;
+                int difY = actual.Y - prolongacion.Y + 1;
+
+                nuevo[difX, difY] = 0;
+
+                int i, j;
+                bool enc = false;
+                Point nuevoActual = new Point(prolongacion.X, prolongacion.Y);
+                g.DrawEllipse(new Pen(Color.Green), nuevoActual.X, nuevoActual.Y, 1, 1);
+
+                for (i = 0; i < 3 && !enc; i++)
+                {
+                    for (j = 0; j < 3 && !enc; j++)
+                    {
+                        if (nuevo[i, j] == 1)
+                        {
+                            enc = true;
+                            Point nuevoProlongacion = new Point(prolongacion.X + i - 1, prolongacion.Y + j - 1);
+                            dev = seProlongaSuficiente(nuevoActual, nuevoProlongacion, longitudLinea - 1, g);
+                        }
+                    }
+                }
+
+                if (!enc)
+                    dev = false;
+            }
+            else
+            {
+                dev = true;
+            }
+
+            return dev;
+        }
+
+        bool seSaleDeCoordenadas(Point punto)
+        {
+            return (punto.X + 1 >= filas ||
+                    punto.X - 1 <= 0 ||
+                    punto.Y + 1 >= cols ||
+                    punto.Y - 1 <= 0 );
+        }
+
+        /// <summary>
+        /// Comprueba que las bifurcaciones encontradas son correctas
+        /// </summary>
+        void comprobarBifurcaciones()
+        {
+            this.pasos[compruebaBifurcaciones] = new Bitmap(huella);
+            Graphics g = Graphics.FromImage(pasos[compruebaBifurcaciones]);
+
+            
+        }
+
         /// <summary>
         /// Busca las Terminaciones y las imprime por panatalla
         /// </summary>
@@ -53,9 +182,12 @@ namespace kernel
             {
                 for (j = 1; j < cols-1; j++)
                 {
-                    if (matriz[i,j]==1 && buscarEnEntorno(i, j, matriz, 2))
+                    if (matriz[i,j]==1 && buscarEnEntorno(i, j, 2))
                     {
-                        g.DrawEllipse(new Pen(Color.Blue),
+
+                        añadirTerminacionPotencial(i, j);
+
+                        g.DrawEllipse(new Pen(atr.colorMinuciaNoFiable),
                             i - atr.radioCirculo/2, j - atr.radioCirculo/2, atr.radioCirculo, atr.radioCirculo);
                     }
                 }
@@ -75,10 +207,13 @@ namespace kernel
             {
                 for (j = 1; j < cols - 1; j++)
                 {
-                    if (matriz[i, j] == 1 && buscarEnEntorno(i, j, matriz, 4)
-                        && numCompConexIgual(i,j,matriz,3))
+                    if (matriz[i, j] == 1 && buscarEnEntorno(i, j, 4)
+                        && numCompConexIgual(i,j,3))
                     {
-                        g.DrawEllipse(new Pen(Color.Red),
+
+                        añadirBifurcacionPotencial(i, j);
+
+                        g.DrawEllipse(new Pen(atr.colorMinuciaNoFiable),
                             i - atr.radioCirculo / 2, j - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
                     }
                 }
@@ -92,7 +227,7 @@ namespace kernel
         /// <param name="y"></param>
         /// <param name="matriz"></param>
         /// <returns></returns>
-        bool numCompConexIgual(int x, int y, int[,] matriz, int numCompConexas)
+        bool numCompConexIgual(int x, int y, int numCompConexas)
         {
             int[,] nuevo = new int[,]{ { matriz[x-1,y-1], matriz[x-1,y], matriz[x-1,y+1]},
                                        { matriz[x,y-1], 0, matriz[x,y+1]},
@@ -206,6 +341,67 @@ namespace kernel
 
             return compConexas == numCompConexas;
         }
+
+        /// <summary>
+        /// Inserta en la lista de terminaciones potenciales el punto dado
+        /// junto con datos de su entorno para poder después clasificar
+        /// la minucia como fiable o no fiable
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        void añadirTerminacionPotencial(int x, int y)
+        {
+            int[,] nuevo = new int[,]{ { matriz[x-1,y-1], matriz[x-1,y], matriz[x-1,y+1]},
+                                       { matriz[x,y-1], 0, matriz[x,y+1]},
+                                       { matriz[x+1,y-1], matriz[x+1,y], matriz[x+1,y+1]} };
+
+            int i, j;
+            bool enc = false;
+
+            Point actual = new Point(x, y);
+            Point prolongacion = new Point(0, 0);
+
+            for (i = 0; i < 3 && !enc ; i++)
+            {
+                for (j = 0; j < 3 && !enc ; j++)
+                {
+                    if (nuevo[i, j] == 1)
+                    {
+                        enc = true;
+                        prolongacion = new Point(x + i - 1, y + j - 1);
+                    }
+                }
+            }
+
+            terminacionesPotenciales.Add(new TerminacionPotencial(actual, prolongacion));
+        }
+
+        void añadirBifurcacionPotencial(int x, int y)
+        {
+            int[,] nuevo = new int[,]{ { matriz[x-1,y-1], matriz[x-1,y], matriz[x-1,y+1]},
+                                       { matriz[x,y-1], 0, matriz[x,y+1]},
+                                       { matriz[x+1,y-1], matriz[x+1,y], matriz[x+1,y+1]} };
+
+            int i, j;
+
+            Point actual = new Point(x, y);
+            Point[] prolongaciones = new Point[3];
+            int puntero = 0;
+
+            for (i = 0; i < 3; i++)
+            {
+                for (j = 0; j < 3; j++)
+                {
+                    if (nuevo[i, j] == 1)
+                    {
+                        prolongaciones[puntero++] = new Point(x + i - 1, y + j - 1);
+                    }
+                }
+            }
+
+            bifurcacionesPotenciales.Add(new BifurcacionPotencial(actual, prolongaciones));
+        }
+
         /// <summary>
         /// dado un punto devuelve el numero de pixeles negros de su entrorno
         /// </summary>
@@ -214,7 +410,7 @@ namespace kernel
         /// <param name="matriz"></param>
         /// <param name="numPuntos"></param>
         /// <returns>cierto si el numero de pixeles negros es igual al pasado por parametro</returns>
-        bool buscarEnEntorno(int x, int y, int[,] matriz, int numPuntos)
+        bool buscarEnEntorno(int x, int y, int numPuntos)
         {
             bool b = false;
             int i, j;
@@ -228,7 +424,7 @@ namespace kernel
                 }
             }
 
-            if (contador==numPuntos)
+            if (contador == numPuntos)
                 b = true;
 
             return b;

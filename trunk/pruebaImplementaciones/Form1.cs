@@ -108,13 +108,19 @@ namespace pruebaImplementaciones
         {
 
             Atributos atr = Atributos.getInstance();
-            atr.colorMinuciaFiable = Color.Blue;
-            atr.colorMinuciaPocoFiable = Color.Red;
-            atr.colorMinuciaNoFiable = Color.Green;
-            atr.radioCirculo = 8;
+            atr.colorTerminacionFiable = Color.Blue;
+            atr.colorTerminacionPocoFiable = Color.BlueViolet;
+            
+            atr.colorBifurcacionFiable = Color.Green;
+            atr.colorBifurcacionPocoFiable = Color.Olive;
+
+            atr.colorMinuciaNoFiable = Color.Red;
+
+            atr.radioCirculo = 10;
             atr.radiosL = new int[] { 27, 45, 63, 81 };
             atr.puntosK = new int[] { 10, 16, 22, 28 };
             atr.w = 0.5;
+            atr.longitudLinea = 12;
 
             Tratamiento trat = new Tratamiento(imagenOriginal, atr);
 
