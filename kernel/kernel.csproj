@@ -38,6 +38,7 @@
     <Compile Include="Atributos.cs" />
     <Compile Include="BifurcacionPotencial.cs" />
     <Compile Include="Circulo.cs" />
+    <Compile Include="Descriptor_base.cs" />
     <Compile Include="Funcion.cs" />
     <Compile Include="Minucia.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

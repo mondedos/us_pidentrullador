@@ -14,6 +14,8 @@ namespace kernel
 
         Circulo[] circulos = null;
 
+        public Descriptor_base descriptor;
+
         public Minucia() : this(0, 0) { }
         /// <summary>
         /// 
@@ -31,6 +33,15 @@ namespace kernel
             angulo = Math.Asin((double)y / Math.Sqrt(x * x + y * y));
 
             circulos = new Circulo[atr.radiosL.Length];
+
+            //calculamos el tamaño del conjunto descriptor base donde cada elemento del conjunto es (angulo, frecuencia)
+            int total = 0;
+            foreach (Circulo cir in circulos)
+            {
+                total += cir.puntos.Length;
+            }
+
+            descriptor = new Descriptor_base(total);
         }
     }
     public enum Fiabilidad
