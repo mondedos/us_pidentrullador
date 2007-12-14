@@ -44,6 +44,15 @@ namespace kernel
                 descriptor.Insertar_puntos_circulos(c);
             }
         }
+
+        public double similitud(Minucia q)
+        {
+            Atributos atr = Atributos.getInstance();
+            double diff = 1 - atr.w;
+            double w = atr.w;
+
+
+        }
     }
     public enum Fiabilidad
     {
