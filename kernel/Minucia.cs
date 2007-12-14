@@ -51,7 +51,8 @@ namespace kernel
             double diff = 1 - atr.w;
             double w = atr.w;
 
-
+            ///Aquí no compilaba, hay que devolver algo
+            return w;
         }
     }
     public enum Fiabilidad
