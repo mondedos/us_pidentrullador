@@ -13,6 +13,7 @@ namespace kernel
         Tipo topologia = Tipo.Terminacion;
 
         Circulo[] circulos = null;
+        public List<Minucia> vecinos;
 
         public Descriptor_base descriptor;
 
@@ -35,7 +36,10 @@ namespace kernel
             circulos = new Circulo[atr.radiosL.Length];
 
             descriptor = new Descriptor_base();
+
+            vecinos = new List<Minucia>();
         }
+
 
         public void Calcular_Conjunto_Descriptor_Base()
         {
@@ -51,15 +55,58 @@ namespace kernel
             double diff = 1 - atr.w;
             double w = atr.w;
 
-            ///Aquí no compilaba, hay que devolver algo
-            return w;
+            return 0;
+        }
+
+        public double parecidos_en_vecinos(Minucia q)
+        {
+            double num = (vecinos.Count + 1) * (q.vecinos.Count + 1);
+            return 0;
+        }
+        /// <summary>
+        /// To determine the order in which to insert correspondences,
+        /// a normalized similarity degree sn between two minutiae is
+        /// defined based on similarity degree s:
+        /// </summary>
+        /// <param name="q"></param>
+        /// <returns></returns>
+        public double Sn(Minucia q)
+        {
+            int size = vecinos.Count + q.vecinos.Count + 1;
+            double sij = s(q);
+            double num = sij * size;
+
+            double sumi = 0;
+
+            foreach (Minucia k in vecinos)
+            {
+                sumi += k.s(q);
+            }
+
+            double sumj = 0;
+
+            foreach (Minucia k in q.vecinos)
+            {
+                sumj += (s(k) - sij);
+            }
+
+            return num / (sumi + sumj);
+        }
+        /// <summary>
+        /// s(pi,qi)
+        /// </summary>
+        /// <param name="q"></param>
+        /// <returns></returns>
+        private double s(Minucia q)
+        {
+            return 0;
         }
     }
     public enum Fiabilidad
     {
         NoFiable,
         Fiable,
-        PocoFiable        
+        PocoFiable
     }
     public enum Tipo
     {
