@@ -162,8 +162,76 @@ namespace kernel
 
             foreach (BifurcacionPotencial bp in bifurcacionesPotenciales)
             {
+                bool fiable = true;
+                Point[] prolongaciones = bp.prolongaciones;
 
+                Point prolongacionMedia = hallarProlongacionMedia(prolongaciones);
+
+                int gradiente = direcciones[prolongacionMedia.X - bp.actual.X + 1, prolongacionMedia.Y - bp.actual.Y + 1];
+                Point[] cercanos = PuntosCercanosDeOtraLinea(bp.actual, gradiente);
+
+                Point cercano1 = cercanos[0];
+                Point cercano2 = cercanos[1];
+
+                if (cercano1 != puntoError && cercano2 != puntoError)
+                {
+                    g.DrawLine(new Pen(atr.colorLinea), bp.actual, cercano1);
+                    g.DrawLine(new Pen(atr.colorLinea), bp.actual, cercano2);
+                    
+                    Point[] unidos1 = buscaUnidos(cercano1);
+                    Point[] unidos2 = buscaUnidos(cercano2);
+                    
+                    bool prol0 = false, prol1 = false, prol2 = false, prol3 = false, prol4 = false, prol5 = false, prol6 = false;
+
+                    if (seProlongaSuficiente(bp.actual, prolongaciones[0], atr.longitudLinea, g))
+                        prol0 = true;
+
+                    if (seProlongaSuficiente(bp.actual, prolongaciones[1], atr.longitudLinea, g))
+                        prol1 = true;
+
+                    if (seProlongaSuficiente(bp.actual, prolongaciones[2], atr.longitudLinea, g))
+                        prol2 = true;
+
+                    if (unidos1[0] != puntoError && seProlongaSuficiente(cercano1, unidos1[0], atr.longitudLinea, g))
+                        prol3 = true;
+
+                    if (unidos1[1] != puntoError && seProlongaSuficiente(cercano1, unidos1[1], atr.longitudLinea, g))
+                        prol4 = true;
+
+                    if (unidos2[0] != puntoError && seProlongaSuficiente(cercano2, unidos2[0], atr.longitudLinea, g))
+                        prol5 = true;
+
+                    if (unidos2[1] != puntoError && seProlongaSuficiente(cercano2, unidos2[1], atr.longitudLinea, g))
+                        prol6 = true;
+
+                    if (prol0 && prol1 && prol2)// && prol3 && prol4 && prol5 && prol6)
+                    {
+                        bifurcacionesFiables.Add(bp.actual);
+                        g.DrawEllipse(new Pen(atr.colorBifurcacionFiable),
+                                bp.actual.X - atr.radioCirculo / 2, bp.actual.Y - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
+                    }
+                    else
+                        fiable = false;
+
+                }
+                else
+                    fiable = false;
+
+                if (!fiable)
+                {
+                    bifurcacionesPocoFiables.Add(bp.actual);
+                    g.DrawRectangle(new Pen(atr.colorBifurcacionPocoFiable),
+                            bp.actual.X - atr.radioCirculo / 2, bp.actual.Y - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
+                }
             }
+        }
+
+        Point hallarProlongacionMedia(Point[] prolongaciones)
+        {
+            return new Point(
+                (prolongaciones[0].X + prolongaciones[1].X + prolongaciones[2].X) / 3,
+                (prolongaciones[0].Y + prolongaciones[2].Y + prolongaciones[2].Y) / 3
+                );
         }
 
         Point[] buscaUnidos(Point actual)
@@ -250,31 +318,38 @@ namespace kernel
         Point BuscaPuntoEnDireccion(Point actual, Point dir, int maxLongitud)
         {
             Point nuevoPunto = new Point(actual.X + dir.X, actual.Y + dir.Y);
+            int pasos = Atributos.getInstance().maxLongitudBuqueda - maxLongitud;
 
             if (maxLongitud > 0 && !seSaleDeCoordenadas(nuevoPunto))
             {
-                if (matriz[nuevoPunto.X, nuevoPunto.Y] == 0)
+                if (pasos < 6)
                 {
-
-                    if ((Atributos.getInstance().maxLongitudBuqueda - maxLongitud) > 3)
+                    nuevoPunto = BuscaPuntoEnDireccion(nuevoPunto, dir, maxLongitud - 1);
+                }
+                else
+                {
+                    if (matriz[nuevoPunto.X, nuevoPunto.Y] == 0)
                     {
-                        if (matriz[nuevoPunto.X + 1, nuevoPunto.Y] == 1)
-                            nuevoPunto = new Point(nuevoPunto.X + 1, nuevoPunto.Y);
+                        if (pasos > 3)
+                        {
+                            if (matriz[nuevoPunto.X + 1, nuevoPunto.Y] == 1)
+                                nuevoPunto = new Point(nuevoPunto.X + 1, nuevoPunto.Y);
 
-                        else if (matriz[nuevoPunto.X - 1, nuevoPunto.Y] == 1)
-                            nuevoPunto = new Point(nuevoPunto.X - 1, nuevoPunto.Y);
+                            else if (matriz[nuevoPunto.X - 1, nuevoPunto.Y] == 1)
+                                nuevoPunto = new Point(nuevoPunto.X - 1, nuevoPunto.Y);
 
-                        else if (matriz[nuevoPunto.X, nuevoPunto.Y + 1] == 1)
-                            nuevoPunto = new Point(nuevoPunto.X, nuevoPunto.Y + 1);
+                            else if (matriz[nuevoPunto.X, nuevoPunto.Y + 1] == 1)
+                                nuevoPunto = new Point(nuevoPunto.X, nuevoPunto.Y + 1);
 
-                        else if (matriz[nuevoPunto.X, nuevoPunto.Y - 1] == 1)
-                            nuevoPunto = new Point(nuevoPunto.X, nuevoPunto.Y - 1);
+                            else if (matriz[nuevoPunto.X, nuevoPunto.Y - 1] == 1)
+                                nuevoPunto = new Point(nuevoPunto.X, nuevoPunto.Y - 1);
+                            else
+                                nuevoPunto = BuscaPuntoEnDireccion(nuevoPunto, dir, maxLongitud - 1);
+                        }
                         else
                             nuevoPunto = BuscaPuntoEnDireccion(nuevoPunto, dir, maxLongitud - 1);
-                    }
-                    else
-                        nuevoPunto = BuscaPuntoEnDireccion(nuevoPunto, dir, maxLongitud - 1);
-                } 
+                    } 
+                }  
             }
             else
             {
@@ -309,7 +384,7 @@ namespace kernel
                 int i, j;
                 bool enc = false;
                 Point nuevoActual = new Point(prolongacion.X, prolongacion.Y);
-                g.DrawEllipse(new Pen(Color.Green), nuevoActual.X, nuevoActual.Y, 1, 1);
+                g.DrawEllipse(new Pen(Atributos.getInstance().colorPixelCercano), nuevoActual.X, nuevoActual.Y, 1, 1);
 
                 for (i = 0; i < 3 && !enc; i++)
                 {

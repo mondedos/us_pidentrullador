@@ -115,6 +115,7 @@ namespace pruebaImplementaciones
             atr.colorBifurcacionPocoFiable = Color.Olive;
 
             atr.colorMinuciaNoFiable = Color.Red;
+            atr.colorPixelCercano = Color.Brown;
             atr.colorLinea = Color.Red;
 
             atr.maxLongitudBuqueda = 30;

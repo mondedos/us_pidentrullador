@@ -18,6 +18,7 @@ namespace kernel
 
         public Color colorMinuciaNoFiable;
         public Color colorLinea;
+        public Color colorPixelCercano;
 
         //atributos para el descriptor de textura
         public int longitudLinea;
