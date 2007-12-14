@@ -115,12 +115,19 @@ namespace pruebaImplementaciones
             atr.colorBifurcacionPocoFiable = Color.Olive;
 
             atr.colorMinuciaNoFiable = Color.Red;
+            atr.colorLinea = Color.Red;
 
-            atr.radioCirculo = 10;
+            atr.maxLongitudBuqueda = 30;
+
+            atr.radioCirculo = 8;
+
             atr.radiosL = new int[] { 27, 45, 63, 81 };
             atr.puntosK = new int[] { 10, 16, 22, 28 };
+
             atr.w = 0.5;
-            atr.longitudLinea = 12;
+
+            // minimo ha de ser 12
+            atr.longitudLinea = 20;
 
             Tratamiento trat = new Tratamiento(imagenOriginal, atr);
 
