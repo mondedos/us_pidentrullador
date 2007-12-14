@@ -34,14 +34,15 @@ namespace kernel
 
             circulos = new Circulo[atr.radiosL.Length];
 
-            //calculamos el tamaño del conjunto descriptor base donde cada elemento del conjunto es (angulo, frecuencia)
-            int total = 0;
-            foreach (Circulo cir in circulos)
-            {
-                total += cir.puntos.Length;
-            }
+            descriptor = new Descriptor_base();
+        }
 
-            descriptor = new Descriptor_base(total);
+        public void Calcular_Conjunto_Descriptor_Base()
+        {
+            foreach (Circulo c in circulos)
+            {
+                descriptor.Insertar_puntos_circulos(c);
+            }
         }
     }
     public enum Fiabilidad
