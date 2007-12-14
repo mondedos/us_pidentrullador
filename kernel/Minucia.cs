@@ -24,7 +24,7 @@ namespace kernel
             this.y = y;
 
             //calcular angulo
-            angulo = Math.Asin(y, Math.Sqrt(x * x + y * y));
+            angulo = Math.Asin((double)y / Math.Sqrt(x * x + y * y));
 
             circulos = new Circulo[atr.radiosL.Length];
         }
