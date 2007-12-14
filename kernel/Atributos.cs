@@ -10,12 +10,17 @@ namespace kernel
         public int radioCirculo;
 
         //colores de minucias
-        public Color colorMinuciaFiable;
-        public Color colorMinuciaPocoFiable;
+        public Color colorTerminacionFiable;
+        public Color colorTerminacionPocoFiable;
+
+        public Color colorBifurcacionFiable;
+        public Color colorBifurcacionPocoFiable;
+
         public Color colorMinuciaNoFiable;
 
         //atributos para el descriptor de textura
         public int longitudLinea;
+        public int maxRadioBusqueda = 30;
         public int[] radiosL;
         public int[] puntosK;
         public double w;

@@ -10,6 +10,8 @@ namespace kernel
         double angulo = 0.0;
 
         Fiabilidad clasificacion = Fiabilidad.NoFiable;
+        Tipo topologia = Tipo.Terminacion;
+
         Circulo[] circulos = null;
         /// <summary>
         /// 
@@ -34,5 +36,10 @@ namespace kernel
         NoFiable,
         Fiable,
         PocoFiable        
+    }
+    public enum Tipo
+    {
+        Terminacion,
+        Bifurcacion
     }
 }

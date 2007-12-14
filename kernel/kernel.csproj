@@ -36,11 +36,13 @@
   <ItemGroup>
     <Compile Include="Adaptador.cs" />
     <Compile Include="Atributos.cs" />
+    <Compile Include="BifurcacionPotencial.cs" />
     <Compile Include="Circulo.cs" />
     <Compile Include="Funcion.cs" />
     <Compile Include="Minucia.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Punto.cs" />
+    <Compile Include="TerminacionPotencial.cs" />
     <Compile Include="Tratamiento.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
