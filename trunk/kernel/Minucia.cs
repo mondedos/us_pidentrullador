@@ -7,12 +7,14 @@ namespace kernel
     public class Minucia
     {
         public int x = 0, y = 0;
-        double angulo = 0.0;
+        public double angulo = 0.0;
 
         Fiabilidad clasificacion = Fiabilidad.NoFiable;
         Tipo topologia = Tipo.Terminacion;
 
         Circulo[] circulos = null;
+
+        public Minucia() : this(0, 0) { }
         /// <summary>
         /// 
         /// </summary>
