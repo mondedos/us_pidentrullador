@@ -6,5 +6,7 @@ namespace PruebasUnit
 {
     public class Class1
     {
+
+        
     }
 }
