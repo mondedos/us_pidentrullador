@@ -17,10 +17,11 @@ namespace kernel
         public Color colorBifurcacionPocoFiable;
 
         public Color colorMinuciaNoFiable;
+        public Color colorLinea;
 
         //atributos para el descriptor de textura
         public int longitudLinea;
-        public int maxRadioBusqueda = 30;
+        public int maxLongitudBuqueda;
         public int[] radiosL;
         public int[] puntosK;
         public double w;
