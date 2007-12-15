@@ -117,6 +117,7 @@ namespace pruebaImplementaciones
             atr.colorMinuciaNoFiable = Color.Red;
             atr.colorPixelCercano = Color.Brown;
             atr.colorLinea = Color.Red;
+            atr.colorRellenoFinPixelCercano = Brushes.Fuchsia;
 
             atr.maxLongitudBuqueda = 30;
 
