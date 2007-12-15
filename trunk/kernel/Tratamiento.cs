@@ -90,7 +90,7 @@ namespace kernel
         }
 
         /// <summary>
-        /// Paso 0 del algoritmo
+        /// 
         /// Busca las Terminaciones y las imprime por panatalla
         /// </summary>
         void buscarTerminaciones()
@@ -118,7 +118,7 @@ namespace kernel
         }
 
         /// <summary>
-        /// Paso 4 del algoritmo
+        /// 
         /// Busca las bifurcaciones y las imprime por pantalla
         /// </summary>
         void buscarBifurcaciones()
@@ -147,7 +147,7 @@ namespace kernel
         }
 
         /// <summary>
-        /// Paso 1 del algoritmo
+        /// 
         /// Comprueba que las terminaciones encontradas son correctas
         /// Para ello recorre la línea que llega a la terminación y 4
         /// más de píxeles cercanos
@@ -223,7 +223,7 @@ namespace kernel
         }
 
         /// <summary>
-        /// Paso 5 del algoritmo
+        /// 
         /// Comprueba que las bifurcaciones encontradas son correctas
         /// Para ello recorre las 3 líneas que salen del punto de bifurcación
         /// más 4 más de pixeles cercanos
@@ -334,7 +334,7 @@ namespace kernel
         }
 
         /// <summary>
-        /// Paso 3 del algoritmo
+        /// 
         /// </summary>
         void guardarTerminaciones()
         {
@@ -361,7 +361,7 @@ namespace kernel
         }
 
         /// <summary>
-        /// Paso 6 del algoritmo
+        /// 
         /// </summary>
         void guardarBifurcaciones()
         {
@@ -389,10 +389,20 @@ namespace kernel
 
         void calcularDescriptoresTerminaciones()
         {
-            this.pasos[calculaDescriptoresTerminaciones] = new Bitmap(huella);
+            this.pasos[calculaDescriptoresTerminaciones] = new Bitmap(this.pasos[compruebaTerminaciones]);
             Graphics g = Graphics.FromImage(pasos[calculaDescriptoresTerminaciones]);
             Atributos atr = Atributos.getInstance();
 
+            foreach (Minucia minucia in minucias)
+            {
+                foreach (Circulo circulo in minucia.circulos)
+                {
+                    foreach (Punto punto in circulo.puntos)
+                    {
+                        g.DrawLine(new Pen(Color.Red), minucia.x, minucia.y, punto.x, punto.y);
+                    }
+                }
+            }
         }
 
         void calcularDescriptoresBifurcaciones()
@@ -402,6 +412,10 @@ namespace kernel
             Atributos atr = Atributos.getInstance();
 
         }
+
+        ////////////////////////////////////////////////////////////////////////////////////////
+        // De ahí para abajo son funciones auxiliares
+        ////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Devuelve un array de los dos pixeles cercanos a uno dado que son negros y no son él mismo

@@ -6,11 +6,11 @@ namespace kernel
 {
     public class Punto
     {
-        int x = 0;
-        int y = 0;
-        int radio = 0;
-        double anguloGlobal = 0;
-        double anguloParcial = 0;
+        public int x = 0;
+        public int y = 0;
+        public int radio = 0;
+        public double anguloGlobal = 0;
+        public double anguloParcial = 0;
 
         public bool esValido = false;
 

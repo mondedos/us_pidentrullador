@@ -17,7 +17,7 @@ namespace kernel
         public int tipo;
 
         // Círculos de puntos concéntricos en torno a la minucia
-        Circulo[] circulos = null;
+        public Circulo[] circulos = null;
 
         public List<Minucia> vecinos;
         public Descriptor_base descriptor;
