@@ -93,6 +93,8 @@ namespace kernel
 
         /// <summary>
         /// Comprueba que las terminaciones encontradas son correctas
+        /// Para ello recorre la línea que llega a la terminación y 4
+        /// más de píxeles cercanos
         /// </summary>
         void comprobarTerminaciones()
         {
@@ -118,21 +120,28 @@ namespace kernel
                     Point[] unidos1 = buscaUnidos(cercano1);
                     Point[] unidos2 = buscaUnidos(cercano2);
 
+                    List<Point> visitadosTemporal;
+
                     bool prol0 = false, prol1 = false, prol2 = false, prol3 = false, prol4 = false;
 
-                    if (seProlongaSuficiente(tp.actual, tp.prolongacion, atr.longitudLinea, g))
+                    visitadosTemporal = new List<Point>();
+                    if (seProlongaSuficiente(tp.actual, tp.prolongacion, visitadosTemporal, atr.longitudLinea, g))
                         prol0 = true;
 
-                    if (unidos1[0] != puntoError && seProlongaSuficiente(cercano1, unidos1[0], atr.longitudLinea, g))
+                    visitadosTemporal = new List<Point>();
+                    if (unidos1[0] != puntoError && seProlongaSuficiente(cercano1, unidos1[0], visitadosTemporal, atr.longitudLinea, g))
                         prol1 = true;
 
-                    if (unidos1[1] != puntoError && seProlongaSuficiente(cercano1, unidos1[1], atr.longitudLinea, g))
+                    visitadosTemporal = new List<Point>();
+                    if (unidos1[1] != puntoError && seProlongaSuficiente(cercano1, unidos1[1], visitadosTemporal, atr.longitudLinea, g))
                         prol2 = true;
 
-                    if (unidos2[0] != puntoError && seProlongaSuficiente(cercano2, unidos2[0], atr.longitudLinea, g))
+                    visitadosTemporal = new List<Point>();
+                    if (unidos2[0] != puntoError && seProlongaSuficiente(cercano2, unidos2[0], visitadosTemporal, atr.longitudLinea, g))
                         prol3 = true;
 
-                    if (unidos2[1] != puntoError && seProlongaSuficiente(cercano2, unidos2[1], atr.longitudLinea, g))
+                    visitadosTemporal = new List<Point>();
+                    if (unidos2[1] != puntoError && seProlongaSuficiente(cercano2, unidos2[1], visitadosTemporal, atr.longitudLinea, g))
                         prol4 = true;
 
                     if (prol0 && prol1 && prol2 && prol3 && prol4)
@@ -159,6 +168,8 @@ namespace kernel
 
         /// <summary>
         /// Comprueba que las bifurcaciones encontradas son correctas
+        /// Para ello recorre las 3 líneas que salen del punto de bifurcación
+        /// más 4 más de pixeles cercanos
         /// </summary>
         void comprobarBifurcaciones()
         {
@@ -205,28 +216,42 @@ namespace kernel
                     
                     Point[] unidos1 = buscaUnidos(cercanoTemp1);
                     Point[] unidos2 = buscaUnidos(cercanoTemp2);
-                    
+                    List<Point> visitadosTemporal;
+
                     bool prol0 = false, prol1 = false, prol2 = false, prol3 = false, prol4 = false, prol5 = false, prol6 = false;
 
-                    if (seProlongaSuficiente(bp.actual, prolongaciones[0], atr.longitudLinea, g))
+                    visitadosTemporal = new List<Point>();
+                    visitadosTemporal.Add(prolongaciones[1]);
+                    visitadosTemporal.Add(prolongaciones[2]);
+                    if (seProlongaSuficiente(bp.actual, prolongaciones[0], visitadosTemporal, atr.longitudLinea, g))
                         prol0 = true;
 
-                    if (seProlongaSuficiente(bp.actual, prolongaciones[1], atr.longitudLinea, g))
+                    visitadosTemporal = new List<Point>();
+                    visitadosTemporal.Add(prolongaciones[0]);
+                    visitadosTemporal.Add(prolongaciones[2]);
+                    if (seProlongaSuficiente(bp.actual, prolongaciones[1], visitadosTemporal, atr.longitudLinea, g))
                         prol1 = true;
 
-                    if (seProlongaSuficiente(bp.actual, prolongaciones[2], atr.longitudLinea, g))
+                    visitadosTemporal = new List<Point>();
+                    visitadosTemporal.Add(prolongaciones[0]);
+                    visitadosTemporal.Add(prolongaciones[1]);
+                    if (seProlongaSuficiente(bp.actual, prolongaciones[2], visitadosTemporal, atr.longitudLinea, g))
                         prol2 = true;
 
-                    if (unidos1[0] != puntoError && seProlongaSuficiente(cercanoTemp1, unidos1[0], atr.longitudLinea, g))
+                    visitadosTemporal = new List<Point>();
+                    if (unidos1[0] != puntoError && seProlongaSuficiente(cercanoTemp1, unidos1[0], visitadosTemporal, atr.longitudLinea, g))
                         prol3 = true;
 
-                    if (unidos1[1] != puntoError && seProlongaSuficiente(cercanoTemp1, unidos1[1], atr.longitudLinea, g))
+                    visitadosTemporal = new List<Point>();
+                    if (unidos1[1] != puntoError && seProlongaSuficiente(cercanoTemp1, unidos1[1], visitadosTemporal, atr.longitudLinea, g))
                         prol4 = true;
 
-                    if (unidos2[0] != puntoError && seProlongaSuficiente(cercanoTemp2, unidos2[0], atr.longitudLinea, g))
+                    visitadosTemporal = new List<Point>();
+                    if (unidos2[0] != puntoError && seProlongaSuficiente(cercanoTemp2, unidos2[0], visitadosTemporal, atr.longitudLinea, g))
                         prol5 = true;
 
-                    if (unidos2[1] != puntoError && seProlongaSuficiente(cercanoTemp2, unidos2[1], atr.longitudLinea, g))
+                    visitadosTemporal = new List<Point>();
+                    if (unidos2[1] != puntoError && seProlongaSuficiente(cercanoTemp2, unidos2[1], visitadosTemporal, atr.longitudLinea, g))
                         prol6 = true;
 
                     if (prol0 && prol1 && prol2 && prol3 && prol4 && prol5 && prol6)
@@ -251,9 +276,15 @@ namespace kernel
             }
         }
 
+        /// <summary>
+        /// Devuelve un array de los dos pixeles cercanos a uno dado que son negros y no son él mismo
+        /// Servirá más adelanta para buscar las prolongaciones y poder lanzar el método
+        /// seProlongaSuficiente(...)
+        /// </summary>
+        /// <param name="actual"></param>
+        /// <returns></returns>
         Point[] buscaUnidos(Point actual)
         {
-
             Point[] unidos = new Point[] { puntoError, puntoError };
             int i, j, x = actual.X, y = actual.Y;
             int contador = 0, puntero = 0;
@@ -376,7 +407,15 @@ namespace kernel
             return nuevoPunto;
         }
 
-        bool seProlongaSuficiente(Point actual, Point prolongacion, int longitudLinea, Graphics g)
+        /// <summary>
+        /// Comprueba que la línea a partir de una minucia se prolonga longitudLinea pixels
+        /// </summary>
+        /// <param name="actual"></param>
+        /// <param name="prolongacion"></param>
+        /// <param name="longitudLinea"></param>
+        /// <param name="g"></param>
+        /// <returns>Devuelve verdadero si la condición es cierta</returns>
+        bool seProlongaSuficiente(Point actual, Point prolongacion, List<Point> visitados, int longitudLinea, Graphics g)
         {
             bool dev = false ;
 
@@ -398,33 +437,49 @@ namespace kernel
 
                 nuevo[difX, difY] = 0;
 
+                Atributos atr = Atributos.getInstance();
                 int i, j;
                 bool enc = false;
+
                 Point nuevoActual = new Point(prolongacion.X, prolongacion.Y);
-                g.DrawEllipse(new Pen(Atributos.getInstance().colorPixelCercano), nuevoActual.X, nuevoActual.Y, 1, 1);
+                g.DrawEllipse(new Pen(atr.colorPixelCercano), nuevoActual.X, nuevoActual.Y, 1, 1);
 
                 for (i = 0; i < 3 && !enc; i++)
                 {
                     for (j = 0; j < 3 && !enc; j++)
                     {
-                        if (nuevo[i, j] == 1)
+                        if (nuevo[i, j] == 1 && !seEncuentraEnLista(visitados,x+i-1,y+j-1))
                         {
                             enc = true;
                             Point nuevoProlongacion = new Point(prolongacion.X + i - 1, prolongacion.Y + j - 1);
-                            dev = seProlongaSuficiente(nuevoActual, nuevoProlongacion, longitudLinea - 1, g);
+                            visitados.Add(nuevoProlongacion);
+                            dev = seProlongaSuficiente(nuevoActual, nuevoProlongacion, visitados, longitudLinea - 1, g);
                         }
                     }
                 }
-
-                if (!enc)
-                    dev = false;
             }
             else
             {
                 dev = true;
+                g.FillRectangle(atr.colorRellenoFinPixelCercano,
+                    actual.X - atr.radioCirculo / 4, actual.Y - atr.radioCirculo / 4, atr.radioCirculo / 2, atr.radioCirculo / 2);
             }
 
             return dev;
+        }
+
+        bool seEncuentraEnLista(List<Point> visitados, int x, int y)
+        {
+            bool seEncuentra = false;
+            foreach (Point punto in visitados)
+            {
+                if (punto.X == x && punto.Y == y)
+                {
+                    seEncuentra = true;
+                    break;
+                }
+            }
+            return seEncuentra;
         }
 
         bool seSaleDeCoordenadas(Point punto)
@@ -461,7 +516,7 @@ namespace kernel
             }
         }
         /// <summary>
-        /// Busca las bifurcaciones y las imprime por panatalla
+        /// Busca las bifurcaciones y las imprime por pantalla
         /// </summary>
         void buscarBifurcaciones()
         {

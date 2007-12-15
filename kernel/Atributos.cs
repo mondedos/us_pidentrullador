@@ -20,6 +20,8 @@ namespace kernel
         public Color colorLinea;
         public Color colorPixelCercano;
 
+        public Brush colorRellenoFinPixelCercano;
+
         //atributos para el descriptor de textura
         public int longitudLinea;
         public int maxLongitudBuqueda;
