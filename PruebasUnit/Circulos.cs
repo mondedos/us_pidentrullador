@@ -9,6 +9,7 @@ namespace PruebasUnit
     [TestFixture]
     public class Circulos
     {
+        /*
         Circulo c;
         [TestFixtureSetUp]
         public void SettingUp()
@@ -20,9 +21,10 @@ namespace PruebasUnit
             atr.puntosK = new int[] { 10, 16, 22, 28 };
             Minucia m=new Minucia();
              c= new Circulo(m,1);
-
+            
             c.puntos[0] = new Punto();
         }
+
         [TestFixtureTearDown]
         public void TearDowning()
         {
@@ -39,5 +41,6 @@ namespace PruebasUnit
         {
             Assert.IsFalse(c.get_fi_polar_punto(1) == 0);
         }
+        */
     }
 }

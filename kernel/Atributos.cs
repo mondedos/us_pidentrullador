@@ -23,11 +23,13 @@ namespace kernel
         public Brush colorRellenoFinPixelCercano;
 
         //atributos para el descriptor de textura
+        public int minPasosAntesDeBuscarPunto;
         public int longitudLinea;
         public int maxLongitudBuqueda;
         public int[] radiosL;
         public int[] puntosK;
         public double w;
+        public int tamEntornoPunto;
 
         //atributos para el descriptor de minucia
 
@@ -44,6 +46,5 @@ namespace kernel
                 return instancia;
             }
         }
-
     }
 }

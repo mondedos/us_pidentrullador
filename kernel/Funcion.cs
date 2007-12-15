@@ -17,5 +17,36 @@ namespace kernel
             return ((c.ToArgb() & 0xFFFFFF) == 0);
         }
 
+        public static bool seSaleDeCoordenadas(int x, int y, int filas, int cols, int margen)
+        {
+            return (x + margen >= filas    ||
+                    y - margen <= 0        ||
+                    y + margen >= cols ||
+                    x - margen <= 0);
+        }
+
+        public static bool hayAlgunoEnEntorno(int x, int y, int[,] matriz, int filas, int cols)
+        {
+            Atributos atr = Atributos.getInstance();
+            int i, j;
+            bool enc = false;
+
+            if (matriz[x, y] == 0)
+            {
+                for (i = x - atr.tamEntornoPunto / 2; i <= x + atr.tamEntornoPunto / 2 && !enc; i++)
+                {
+                    for (j = y - atr.tamEntornoPunto / 2; j <= y + atr.tamEntornoPunto / 2 && !enc; j++)
+                    {
+                        enc = matriz[i, j] == 1;
+                    }
+                }
+            }
+            else
+            {
+                enc = true;
+            }
+
+            return enc;
+        }
     }
 }

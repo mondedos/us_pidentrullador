@@ -41,6 +41,7 @@
     <Compile Include="Descriptor_base.cs" />
     <Compile Include="Funcion.cs" />
     <Compile Include="GreedyMatch.cs" />
+    <Compile Include="Matriz.cs" />
     <Compile Include="Minucia.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Punto.cs" />

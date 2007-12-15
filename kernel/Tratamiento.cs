@@ -9,7 +9,6 @@ namespace kernel
     {
         Bitmap huella;
         int[,] matriz;
-        Atributos atr;
         Bitmap[] pasos;
         int filas, cols;
 
@@ -25,19 +24,39 @@ namespace kernel
         static int busquedaTerminaciones = 0;
         static int compruebaTerminaciones = 1;
         static int guardaTerminaciones = 2;
-        static int busquedaBifurcaciones = 3;
-        static int compruebaBifurcaciones = 4;
-        static int guardaBifurcaciones = 5;
-        static int totalPasos = 6;
+        static int calculaDescriptoresTerminaciones = 3;
+
+        static int busquedaBifurcaciones = 4;
+        static int compruebaBifurcaciones = 5;
+        static int guardaBifurcaciones = 6;
+        static int calculaDescriptoresBifurcaciones = 7;
+
+        static int totalPasos = 8;
+
+        public static String [] textoPasos = new String[]{ 
+            "Huella original",
+            "Comprobar terminaciones",
+            "Chequear terminaciones correctas",
+            "Mostrar terminaciones correctas",
+            "Calcular descriptores de terminaciones",
+            "Comprobar bifurcaciones",
+            "Chequear bifurcaciones correctas",
+            "Mostrar bifurcaciones correctas",
+            "Calcular descriptores de bifurcaciones"
+        };
 
         List<TerminacionPotencial> terminacionesPotenciales = new List<TerminacionPotencial>();
         List<BifurcacionPotencial> bifurcacionesPotenciales = new List<BifurcacionPotencial>();
 
         List<Point> terminacionesFiables = new List<Point>();
-        List<Point> bifurcacionesFiables = new List<Point>();
-
         List<Point> terminacionesPocoFiables = new List<Point>();
+        List<Point> terminacionesNoFiables = new List<Point>();
+
+        List<Point> bifurcacionesFiables = new List<Point>();
         List<Point> bifurcacionesPocoFiables = new List<Point>();
+        List<Point> bifurcacionesNoFiables = new List<Point>();
+
+        List<Minucia> minucias = new List<Minucia>();
 
         /// <summary>
         /// Aplica los agoritmos de busqueda de terminaciones y bifurcaciones
@@ -48,50 +67,87 @@ namespace kernel
         public Tratamiento(Bitmap huella, Atributos atr)
         {
             this.pasos = new Bitmap[totalPasos];
-
             this.huella = new Bitmap(huella);
-            this.matriz = Adaptador.Adaptar(this.huella);
-            this.atr = atr;
 
+            this.matriz = Adaptador.Adaptar(this.huella);
             this.filas = huella.Width;
             this.cols = huella.Height;
+
+            Matriz m = Matriz.getInstance();
+            m.matriz = this.matriz;
+            m.filas = this.filas;
+            m.cols = this.cols;
 
             buscarTerminaciones();
             comprobarTerminaciones();
             guardarTerminaciones();
+            calcularDescriptoresTerminaciones();
 
             buscarBifurcaciones();
             comprobarBifurcaciones();
             guardarBifurcaciones();
+            calcularDescriptoresBifurcaciones();
         }
 
-        void guardarTerminaciones()
+        /// <summary>
+        /// Paso 0 del algoritmo
+        /// Busca las Terminaciones y las imprime por panatalla
+        /// </summary>
+        void buscarTerminaciones()
         {
-            this.pasos[guardaTerminaciones] = new Bitmap(huella);
-            Graphics g = Graphics.FromImage(pasos[guardaTerminaciones]);
+            int i, j;
+
+            this.pasos[busquedaTerminaciones] = new Bitmap(huella);
+            Graphics g = Graphics.FromImage(pasos[busquedaTerminaciones]);
             Atributos atr = Atributos.getInstance();
 
-            foreach (Point terminacion in terminacionesFiables)
+            for (i = 1; i < filas - 1; i++)
             {
-                g.DrawEllipse(new Pen(atr.colorTerminacionFiable),
-                    terminacion.X - atr.radioCirculo / 2, terminacion.Y - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
-            }
-        }
+                for (j = 1; j < cols - 1; j++)
+                {
+                    if (matriz[i, j] == 1 && buscarEnEntorno(i, j, 2))
+                    {
 
-        void guardarBifurcaciones()
-        {
-            this.pasos[guardaBifurcaciones] = new Bitmap(huella);
-            Graphics g = Graphics.FromImage(pasos[guardaBifurcaciones]);
-            Atributos atr = Atributos.getInstance();
+                        añadirTerminacionPotencial(i, j);
 
-            foreach (Point bifurcacion in bifurcacionesFiables)
-            {
-                g.DrawEllipse(new Pen(atr.colorBifurcacionFiable),
-                    bifurcacion.X - atr.radioCirculo / 2, bifurcacion.Y - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
+                        g.DrawEllipse(new Pen(atr.colorMinuciaNoFiable),
+                            i - atr.radioCirculo / 2, j - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
+                    }
+                }
             }
         }
 
         /// <summary>
+        /// Paso 4 del algoritmo
+        /// Busca las bifurcaciones y las imprime por pantalla
+        /// </summary>
+        void buscarBifurcaciones()
+        {
+            int i, j;
+
+            this.pasos[busquedaBifurcaciones] = new Bitmap(huella);
+            Graphics g = Graphics.FromImage(pasos[busquedaBifurcaciones]);
+            Atributos atr = Atributos.getInstance();
+
+            for (i = 1; i < filas - 1; i++)
+            {
+                for (j = 1; j < cols - 1; j++)
+                {
+                    if (matriz[i, j] == 1 && buscarEnEntorno(i, j, 4)
+                        && numCompConexIgual(i, j, 3))
+                    {
+
+                        añadirBifurcacionPotencial(i, j);
+
+                        g.DrawEllipse(new Pen(atr.colorMinuciaNoFiable),
+                            i - atr.radioCirculo / 2, j - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Paso 1 del algoritmo
         /// Comprueba que las terminaciones encontradas son correctas
         /// Para ello recorre la línea que llega a la terminación y 4
         /// más de píxeles cercanos
@@ -153,9 +209,9 @@ namespace kernel
                     else
                         fiable = false;
 
-                    }
-                    else
-                        fiable = false;
+                }
+                else
+                    fiable = false;
 
                 if (!fiable)
                 {
@@ -167,6 +223,7 @@ namespace kernel
         }
 
         /// <summary>
+        /// Paso 5 del algoritmo
         /// Comprueba que las bifurcaciones encontradas son correctas
         /// Para ello recorre las 3 líneas que salen del punto de bifurcación
         /// más 4 más de pixeles cercanos
@@ -198,7 +255,7 @@ namespace kernel
                     cercanoTemp1 = cercanos1[0];
                     cercanoTemp2 = cercanos1[1];
                 }
-                else if (cercanos2[0] != puntoError &&  cercanos2[1] != puntoError)
+                else if (cercanos2[0] != puntoError && cercanos2[1] != puntoError)
                 {
                     cercanoTemp1 = cercanos2[0];
                     cercanoTemp2 = cercanos2[1];
@@ -213,7 +270,7 @@ namespace kernel
                 {
                     g.DrawLine(new Pen(atr.colorLinea), bp.actual, cercanoTemp1);
                     g.DrawLine(new Pen(atr.colorLinea), bp.actual, cercanoTemp2);
-                    
+
                     Point[] unidos1 = buscaUnidos(cercanoTemp1);
                     Point[] unidos2 = buscaUnidos(cercanoTemp2);
                     List<Point> visitadosTemporal;
@@ -274,6 +331,76 @@ namespace kernel
                             bp.actual.X - atr.radioCirculo / 2, bp.actual.Y - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
                 }
             }
+        }
+
+        /// <summary>
+        /// Paso 3 del algoritmo
+        /// </summary>
+        void guardarTerminaciones()
+        {
+            this.pasos[guardaTerminaciones] = new Bitmap(huella);
+            Graphics g = Graphics.FromImage(pasos[guardaTerminaciones]);
+            Atributos atr = Atributos.getInstance();
+
+            foreach (Point terminacion in terminacionesFiables)
+            {
+                minucias.Add(new Minucia(terminacion.X, terminacion.Y,Minucia.Fiable,Minucia.Terminacion));
+                g.DrawEllipse(new Pen(atr.colorTerminacionFiable),
+                    terminacion.X - atr.radioCirculo / 2, terminacion.Y - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
+            }
+
+            foreach (Point terminacion in terminacionesPocoFiables)
+            {
+                minucias.Add(new Minucia(terminacion.X, terminacion.Y,Minucia.PocoFiable,Minucia.Terminacion));
+            }
+
+            foreach (Point terminacion in terminacionesNoFiables)
+            {
+                minucias.Add(new Minucia(terminacion.X, terminacion.Y, Minucia.NoFiable, Minucia.Terminacion));
+            }
+        }
+
+        /// <summary>
+        /// Paso 6 del algoritmo
+        /// </summary>
+        void guardarBifurcaciones()
+        {
+            this.pasos[guardaBifurcaciones] = new Bitmap(huella);
+            Graphics g = Graphics.FromImage(pasos[guardaBifurcaciones]);
+            Atributos atr = Atributos.getInstance();
+
+            foreach (Point bifurcacion in bifurcacionesFiables)
+            {
+                minucias.Add(new Minucia(bifurcacion.X, bifurcacion.Y, Minucia.Fiable, Minucia.Bifurcacion));
+                g.DrawEllipse(new Pen(atr.colorBifurcacionFiable),
+                    bifurcacion.X - atr.radioCirculo / 2, bifurcacion.Y - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
+            }
+
+            foreach (Point bifurcacion in bifurcacionesPocoFiables)
+            {
+                minucias.Add(new Minucia(bifurcacion.X, bifurcacion.Y, Minucia.PocoFiable, Minucia.Bifurcacion));
+            }
+
+            foreach (Point bifurcacion in bifurcacionesNoFiables)
+            {
+                minucias.Add(new Minucia(bifurcacion.X, bifurcacion.Y, Minucia.NoFiable, Minucia.Bifurcacion));
+            }
+        }
+
+        void calcularDescriptoresTerminaciones()
+        {
+            this.pasos[calculaDescriptoresTerminaciones] = new Bitmap(huella);
+            Graphics g = Graphics.FromImage(pasos[calculaDescriptoresTerminaciones]);
+            Atributos atr = Atributos.getInstance();
+
+        }
+
+        void calcularDescriptoresBifurcaciones()
+        {
+            this.pasos[calculaDescriptoresBifurcaciones] = new Bitmap(huella);
+            Graphics g = Graphics.FromImage(pasos[calculaDescriptoresBifurcaciones]);
+            Atributos atr = Atributos.getInstance();
+
         }
 
         /// <summary>
@@ -367,10 +494,11 @@ namespace kernel
         {
             Point nuevoPunto = new Point(actual.X + dir.X, actual.Y + dir.Y);
             int pasos = Atributos.getInstance().maxLongitudBuqueda - maxLongitud;
+            Atributos atr = Atributos.getInstance();
 
-            if (maxLongitud > 0 && !seSaleDeCoordenadas(nuevoPunto))
+            if (maxLongitud > 0 && !Funcion.seSaleDeCoordenadas(nuevoPunto.X, nuevoPunto.Y, filas, cols, 1))
             {
-                if (pasos < 6)
+                if (pasos <= atr.minPasosAntesDeBuscarPunto)
                 {
                     nuevoPunto = BuscaPuntoEnDireccion(nuevoPunto, dir, maxLongitud - 1);
                 }
@@ -378,8 +506,6 @@ namespace kernel
                 {
                     if (matriz[nuevoPunto.X, nuevoPunto.Y] == 0)
                     {
-                        if (pasos > 3)
-                        {
                             if (matriz[nuevoPunto.X + 1, nuevoPunto.Y] == 1)
                                 nuevoPunto = new Point(nuevoPunto.X + 1, nuevoPunto.Y);
 
@@ -393,9 +519,6 @@ namespace kernel
                                 nuevoPunto = new Point(nuevoPunto.X, nuevoPunto.Y - 1);
                             else
                                 nuevoPunto = BuscaPuntoEnDireccion(nuevoPunto, dir, maxLongitud - 1);
-                        }
-                        else
-                            nuevoPunto = BuscaPuntoEnDireccion(nuevoPunto, dir, maxLongitud - 1);
                     } 
                 }  
             }
@@ -418,8 +541,9 @@ namespace kernel
         bool seProlongaSuficiente(Point actual, Point prolongacion, List<Point> visitados, int longitudLinea, Graphics g)
         {
             bool dev = false ;
+            Atributos atr = Atributos.getInstance();
 
-            if (seSaleDeCoordenadas(prolongacion))
+            if (Funcion.seSaleDeCoordenadas(prolongacion.X, prolongacion.Y, filas, cols, 1))
             {
                 dev = false;
             }
@@ -437,7 +561,6 @@ namespace kernel
 
                 nuevo[difX, difY] = 0;
 
-                Atributos atr = Atributos.getInstance();
                 int i, j;
                 bool enc = false;
 
@@ -482,65 +605,6 @@ namespace kernel
             return seEncuentra;
         }
 
-        bool seSaleDeCoordenadas(Point punto)
-        {
-            return (punto.X + 1 >= filas ||
-                    punto.X - 1 <= 0 ||
-                    punto.Y + 1 >= cols ||
-                    punto.Y - 1 <= 0 );
-        }
-
-        /// <summary>
-        /// Busca las Terminaciones y las imprime por panatalla
-        /// </summary>
-        void buscarTerminaciones()
-        {
-            int i, j;
-            
-            this.pasos[busquedaTerminaciones] = new Bitmap(huella);
-            Graphics g = Graphics.FromImage(pasos[busquedaTerminaciones]);
-
-            for (i = 1; i < filas-1; i++)
-            {
-                for (j = 1; j < cols-1; j++)
-                {
-                    if (matriz[i,j]==1 && buscarEnEntorno(i, j, 2))
-                    {
-
-                        añadirTerminacionPotencial(i, j);
-
-                        g.DrawEllipse(new Pen(atr.colorMinuciaNoFiable),
-                            i - atr.radioCirculo/2, j - atr.radioCirculo/2, atr.radioCirculo, atr.radioCirculo);
-                    }
-                }
-            }
-        }
-        /// <summary>
-        /// Busca las bifurcaciones y las imprime por pantalla
-        /// </summary>
-        void buscarBifurcaciones()
-        {
-            int i, j;
-
-            this.pasos[busquedaBifurcaciones] = new Bitmap(huella);
-            Graphics g = Graphics.FromImage(pasos[busquedaBifurcaciones]);
-
-            for (i = 1; i < filas - 1; i++)
-            {
-                for (j = 1; j < cols - 1; j++)
-                {
-                    if (matriz[i, j] == 1 && buscarEnEntorno(i, j, 4)
-                        && numCompConexIgual(i,j,3))
-                    {
-
-                        añadirBifurcacionPotencial(i, j);
-
-                        g.DrawEllipse(new Pen(atr.colorMinuciaNoFiable),
-                            i - atr.radioCirculo / 2, j - atr.radioCirculo / 2, atr.radioCirculo, atr.radioCirculo);
-                    }
-                }
-            }
-        }
         /// <summary>
         /// Detecta si una mascara centrada en un entorno de un punto
         /// tiene tres componentes conexas.
