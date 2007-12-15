@@ -116,13 +116,13 @@ namespace kernel
             return num / (sumi + sumj);
         }
         /// <summary>
-        /// s(pi,qi)
+        /// s(pi,qi) es el grado de similitud entre dos minucias
         /// </summary>
         /// <param name="q"></param>
         /// <returns></returns>
         private double s(Minucia q)
         {
-            return 0;
+            return parecidos_en_vecinos(q);
         }
     }
 }
