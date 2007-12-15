@@ -6,37 +6,60 @@ namespace kernel
 {
     public class Minucia
     {
+        // coordenadas y ángulo inferior con respecto al origne
         public int x = 0, y = 0;
         public double angulo = 0.0;
 
-        Fiabilidad clasificacion = Fiabilidad.NoFiable;
-        Tipo topologia = Tipo.Terminacion;
+        // Indicaremos si es fiable, poco fiable o no fiable
+        public int fiabilidad;
 
+        // Indicaremos si es terminación o bifurcación
+        public int tipo;
+
+        // Círculos de puntos concéntricos en torno a la minucia
         Circulo[] circulos = null;
-        public List<Minucia> vecinos;
 
+        public List<Minucia> vecinos;
         public Descriptor_base descriptor;
 
-        public Minucia() : this(0, 0) { }
+        // Pongo esto como entero porque los enum no me dejaba declararlos estáticos
+        // y tengo que referenciarlos desde fuera a la hora de llamar al constructor
+        public static int Fiable = 0;
+        public static int PocoFiable = 1;
+        public static int NoFiable = 2;
+        public static int Terminacion = 0;
+        public static int Bifurcacion = 1;
+        public static int Desconocido = -1;
+
+        public Minucia() : this(0, 0, Minucia.NoFiable, Minucia.Desconocido) { }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="x">i filas</param>
         /// <param name="y">j columnas</param>
-        public Minucia(int x, int y)
+        public Minucia(int x, int y, int fiabilidad, int tipo)
         {
             Atributos atr = Atributos.getInstance();
 
             this.x = x;
             this.y = y;
+            this.fiabilidad = fiabilidad;
+            this.tipo = tipo;
 
             //calcular angulo
             angulo = Math.Asin((double)y / Math.Sqrt(x * x + y * y));
 
             circulos = new Circulo[atr.radiosL.Length];
 
-            descriptor = new Descriptor_base();
+            for (int i = 0; i < circulos.Length; i++)
+            {
+                // Desacoplo el acceso a Atributos desde la clase círculo, así
+                // ahora sólo se hace desde aquí. Le paso al círculo su radio y
+                // el número de puntos que debe buscar.
+                circulos[i] = new Circulo(i, angulo, atr.radiosL[i], atr.puntosK[i]);
+            }
 
+            descriptor = new Descriptor_base();
             vecinos = new List<Minucia>();
         }
 
@@ -101,16 +124,5 @@ namespace kernel
         {
             return 0;
         }
-    }
-    public enum Fiabilidad
-    {
-        NoFiable,
-        Fiable,
-        PocoFiable
-    }
-    public enum Tipo
-    {
-        Terminacion,
-        Bifurcacion
     }
 }

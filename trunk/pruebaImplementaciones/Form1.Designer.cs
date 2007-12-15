@@ -37,6 +37,7 @@
             this.trackBar = new System.Windows.Forms.TrackBar();
             this.siguiente = new System.Windows.Forms.Button();
             this.anterior = new System.Windows.Forms.Button();
+            this.textoPaso = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             this.SuspendLayout();
@@ -65,7 +66,7 @@
             // 
             // ejecutar
             // 
-            this.ejecutar.Location = new System.Drawing.Point(246, 578);
+            this.ejecutar.Location = new System.Drawing.Point(32, 578);
             this.ejecutar.Name = "ejecutar";
             this.ejecutar.Size = new System.Drawing.Size(75, 23);
             this.ejecutar.TabIndex = 2;
@@ -93,7 +94,7 @@
             this.trackBar.Location = new System.Drawing.Point(71, 617);
             this.trackBar.Maximum = 0;
             this.trackBar.Name = "trackBar";
-            this.trackBar.Size = new System.Drawing.Size(434, 45);
+            this.trackBar.Size = new System.Drawing.Size(434, 42);
             this.trackBar.TabIndex = 4;
             this.trackBar.ValueChanged += new System.EventHandler(this.trackBar_ValueChanged);
             // 
@@ -117,11 +118,23 @@
             this.anterior.UseVisualStyleBackColor = true;
             this.anterior.Click += new System.EventHandler(this.anterior_Click);
             // 
+            // textoPaso
+            // 
+            this.textoPaso.AutoSize = true;
+            this.textoPaso.Location = new System.Drawing.Point(121, 578);
+            this.textoPaso.Name = "textoPaso";
+            this.textoPaso.Size = new System.Drawing.Size(78, 13);
+            this.textoPaso.TabIndex = 7;
+            this.textoPaso.Text = "Imagen original";
+            this.textoPaso.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.textoPaso.Click += new System.EventHandler(this.label1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(568, 663);
+            this.Controls.Add(this.textoPaso);
             this.Controls.Add(this.anterior);
             this.Controls.Add(this.siguiente);
             this.Controls.Add(this.trackBar);
@@ -152,6 +165,7 @@
         private System.Windows.Forms.TrackBar trackBar;
         private System.Windows.Forms.Button siguiente;
         private System.Windows.Forms.Button anterior;
+        private System.Windows.Forms.Label textoPaso;
     }
 }
 

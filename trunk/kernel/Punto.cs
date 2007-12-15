@@ -6,15 +6,38 @@ namespace kernel
 {
     public class Punto
     {
-        int x = 0, y = 0;
+        int x = 0;
+        int y = 0;
+        int radio = 0;
+        double anguloGlobal = 0;
+        double anguloParcial = 0;
 
-        public bool esValido = true;
+        public bool esValido = false;
 
-        public Punto() : this(0, 0) { }
+        public Punto() : this(0, 0, 0, 0, 0) { }
 
-        public Punto(int x, int y)
+        public Punto(int x, int y, int radio, double anguloGlobal, double anguloParcial)
         {
-            this.x = x; this.y = y;
+            Atributos atr = Atributos.getInstance();
+
+            // coordenadas del punto en cartesiano
+            this.x = x; 
+            this.y = y;
+
+            // angulo de la minucia a la que le corresponde al punto
+            this.anguloGlobal = anguloGlobal;
+
+            // coordenadas polares del punto del punto con respecto a la minucia
+            this.radio = radio;
+            this.anguloParcial = anguloParcial;
+
+            Matriz m = Matriz.getInstance();
+
+            if (!Funcion.seSaleDeCoordenadas(x, y, m.filas, m.cols, atr.tamEntornoPunto/2) && 
+                 Funcion.hayAlgunoEnEntorno(x,y,m.matriz,m.filas,m.cols))
+            {
+                this.esValido = true;
+            }
         }
 
         public override string ToString()

@@ -18,6 +18,7 @@ namespace pruebaImplementaciones
         //o desde un archivo
         Bitmap imagenOriginal;
 
+        String[] textoPasos = Tratamiento.textoPasos;
         Bitmap[] pasos;
 
         public Form1()
@@ -33,6 +34,7 @@ namespace pruebaImplementaciones
             Bitmap bmp = new Bitmap(Properties.Resources.huella);
             imagenOriginal = Binarizar(bmp);
 
+            textoPaso.Text = "Imagen original";
             pictureBox.Image = imagenOriginal;
         }
 
@@ -82,6 +84,8 @@ namespace pruebaImplementaciones
 
             //Se muestra la imagen original
             pictureBox.Image = imagenOriginal;
+
+            textoPaso.Text = "Imagen original";
         }
 
         //Al CARGAR la imagen desde archivo se pierde algo de 
@@ -122,11 +126,13 @@ namespace pruebaImplementaciones
             atr.maxLongitudBuqueda = 30;
 
             atr.radioCirculo = 8;
+            atr.minPasosAntesDeBuscarPunto = 10;
 
             atr.radiosL = new int[] { 27, 45, 63, 81 };
             atr.puntosK = new int[] { 10, 16, 22, 28 };
 
             atr.w = 0.5;
+            atr.tamEntornoPunto = 3;
 
             // minimo ha de ser 12
             atr.longitudLinea = 20;
@@ -165,18 +171,27 @@ namespace pruebaImplementaciones
         private void trackBar_ValueChanged(object sender, EventArgs e)
         {
             pictureBox.Image = pasos[trackBar.Value];
+            textoPaso.Text = textoPasos[trackBar.Value];
         }
 
         private void anterior_Click(object sender, EventArgs e)
         {
             if (trackBar.Value > trackBar.Minimum)
                 trackBar.Value--;
+
+            textoPaso.Text = textoPasos[trackBar.Value];
         }
 
         private void siguiente_Click(object sender, EventArgs e)
         {
             if (trackBar.Value < trackBar.Maximum)
                 trackBar.Value++;
+
+            textoPaso.Text = textoPasos[trackBar.Value];
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
 
         }
     }
