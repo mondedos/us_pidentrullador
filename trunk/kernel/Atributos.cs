@@ -30,6 +30,7 @@ namespace kernel
         public int[] puntosK;
         public double w;
         public int tamEntornoPunto;
+        public int numEjemplos;
 
         //atributos para el descriptor de minucia
 

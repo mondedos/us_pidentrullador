@@ -24,12 +24,12 @@ namespace kernel
 
         // Pongo esto como entero porque los enum no me dejaba declararlos estáticos
         // y tengo que referenciarlos desde fuera a la hora de llamar al constructor
-        public static int Fiable = 0;
-        public static int PocoFiable = 1;
-        public static int NoFiable = 2;
-        public static int Terminacion = 0;
-        public static int Bifurcacion = 1;
-        public static int Desconocido = -1;
+        public const int Fiable = 0;
+        public const int PocoFiable = 1;
+        public const int NoFiable = 2;
+        public const int Terminacion = 0;
+        public const int Bifurcacion = 1;
+        public const int Desconocido = -1;
 
         public Minucia() : this(0, 0, Minucia.NoFiable, Minucia.Desconocido) { }
         /// <summary>
@@ -56,10 +56,10 @@ namespace kernel
                 // Desacoplo el acceso a Atributos desde la clase círculo, así
                 // ahora sólo se hace desde aquí. Le paso al círculo su radio y
                 // el número de puntos que debe buscar.
-                circulos[i] = new Circulo(i, angulo, atr.radiosL[i], atr.puntosK[i]);
+                circulos[i] = new Circulo(i, angulo, atr.radiosL[i], atr.puntosK[i], this);
             }
 
-            descriptor = new Descriptor_base();
+            descriptor = new Descriptor_base(this);
             vecinos = new List<Minucia>();
         }
 

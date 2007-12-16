@@ -24,25 +24,24 @@ namespace kernel
         static int busquedaTerminaciones = 0;
         static int compruebaTerminaciones = 1;
         static int guardaTerminaciones = 2;
-        static int calculaDescriptoresTerminaciones = 3;
+        
+        static int busquedaBifurcaciones = 3;
+        static int compruebaBifurcaciones = 4;
+        static int guardaBifurcaciones = 5;
 
-        static int busquedaBifurcaciones = 4;
-        static int compruebaBifurcaciones = 5;
-        static int guardaBifurcaciones = 6;
-        static int calculaDescriptoresBifurcaciones = 7;
+        static int calculaDescriptores = 6;
 
-        static int totalPasos = 8;
+        static int totalPasos = 7;
 
         public static String [] textoPasos = new String[]{ 
             "Huella original",
             "Comprobar terminaciones",
-            "Chequear terminaciones correctas",
-            "Mostrar terminaciones correctas",
-            "Calcular descriptores de terminaciones",
+            "Chequear terminaciones fiables",
+            "Mostrar terminaciones fiables",
             "Comprobar bifurcaciones",
-            "Chequear bifurcaciones correctas",
-            "Mostrar bifurcaciones correctas",
-            "Calcular descriptores de bifurcaciones"
+            "Chequear bifurcaciones fiables",
+            "Mostrar bifurcaciones fiables",
+            "Calcula los descriptores asociados y muestra algunos ejemplos"
         };
 
         List<TerminacionPotencial> terminacionesPotenciales = new List<TerminacionPotencial>();
@@ -81,12 +80,12 @@ namespace kernel
             buscarTerminaciones();
             comprobarTerminaciones();
             guardarTerminaciones();
-            calcularDescriptoresTerminaciones();
 
             buscarBifurcaciones();
             comprobarBifurcaciones();
             guardarBifurcaciones();
-            calcularDescriptoresBifurcaciones();
+
+            calcularDescriptores();
         }
 
         /// <summary>
@@ -387,30 +386,71 @@ namespace kernel
             }
         }
 
-        void calcularDescriptoresTerminaciones()
+        void calcularDescriptores()
         {
-            this.pasos[calculaDescriptoresTerminaciones] = new Bitmap(this.pasos[compruebaTerminaciones]);
-            Graphics g = Graphics.FromImage(pasos[calculaDescriptoresTerminaciones]);
+            this.pasos[calculaDescriptores] = new Bitmap(huella);
+            Graphics g = Graphics.FromImage(pasos[calculaDescriptores]);
             Atributos atr = Atributos.getInstance();
+
+            // Selecciona las minucias que se van a imprimir por pantalla
+            int numMinucia = 0;
+            Random r = new Random();
+            List<int> lista = new List<int>();
+            for (int i = 0; i < atr.numEjemplos; i++)
+                lista.Add(r.Next(minucias.Count));
 
             foreach (Minucia minucia in minucias)
             {
-                foreach (Circulo circulo in minucia.circulos)
+                Color cFiable = Color.Black;
+                Color cPocoFiable = Color.Black;
+
+                switch (minucia.tipo)
                 {
-                    foreach (Punto punto in circulo.puntos)
-                    {
-                        g.DrawLine(new Pen(Color.Red), minucia.x, minucia.y, punto.x, punto.y);
+                    case Minucia.Terminacion: cFiable = atr.colorTerminacionFiable;
+                                              cPocoFiable = atr.colorTerminacionPocoFiable;
+                                              break;
+                    case Minucia.Bifurcacion: cFiable = atr.colorBifurcacionFiable;
+                                              cPocoFiable = atr.colorBifurcacionPocoFiable;
+                                              break;
+                }
+
+                switch (minucia.fiabilidad)
+                {
+                    case Minucia.Fiable:
+                        g.DrawEllipse(new Pen(cFiable),
+                                minucia.x - atr.radioCirculo / 2, minucia.y - atr.radioCirculo / 2, 
+                                atr.radioCirculo, atr.radioCirculo); 
+                    
+                    break;
+                    case Minucia.PocoFiable:
+                        g.DrawRectangle(new Pen(cPocoFiable),
+                            minucia.x - atr.radioCirculo / 2, minucia.y - atr.radioCirculo / 2, 
+                            atr.radioCirculo, atr.radioCirculo); 
+                    break;
+                }
+                
+                if (seEncuentraEnLista(lista, numMinucia))
+                {
+                    foreach (Circulo circulo in minucia.circulos)
+                    {                    
+                        g.DrawEllipse(new Pen(Color.Green), 
+                            minucia.x - circulo.radio, minucia.y - circulo.radio, circulo.radio*2, circulo.radio*2);
+
+                        foreach (Punto punto in circulo.puntos)
+                        {
+                            g.DrawLine(new Pen(Color.Red), minucia.x, minucia.y, punto.x, punto.y);
+
+                            if (punto.esValido)
+                                g.FillRectangle(atr.colorRellenoFinPixelCercano,
+                                    punto.x - atr.tamEntornoPunto / 2, punto.y - atr.tamEntornoPunto / 2,
+                                    atr.tamEntornoPunto, atr.tamEntornoPunto);
+
+                        }
                     }
                 }
+
+                numMinucia++;
             }
-        }
-
-        void calcularDescriptoresBifurcaciones()
-        {
-            this.pasos[calculaDescriptoresBifurcaciones] = new Bitmap(huella);
-            Graphics g = Graphics.FromImage(pasos[calculaDescriptoresBifurcaciones]);
-            Atributos atr = Atributos.getInstance();
-
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -616,6 +656,22 @@ namespace kernel
                     break;
                 }
             }
+            return seEncuentra;
+        }
+
+        bool seEncuentraEnLista(List<int> lista, int num)
+        {
+            bool seEncuentra = false;
+
+            foreach (int x in lista)
+            {
+                if (x == num)
+                {
+                    seEncuentra = true;
+                    break;
+                }
+            }
+
             return seEncuentra;
         }
 

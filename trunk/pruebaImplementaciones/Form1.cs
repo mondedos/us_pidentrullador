@@ -132,9 +132,11 @@ namespace pruebaImplementaciones
             atr.puntosK = new int[] { 10, 16, 22, 28 };
 
             atr.w = 0.5;
-            atr.tamEntornoPunto = 3;
 
-            // minimo ha de ser 12
+            atr.tamEntornoPunto = 5;
+            atr.numEjemplos = 3;
+
+            // El mínimo ha de ser 12
             atr.longitudLinea = 20;
 
             Tratamiento trat = new Tratamiento(imagenOriginal, atr);
