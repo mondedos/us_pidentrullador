@@ -80,11 +80,69 @@ namespace kernel
 
             return 0;
         }
-
+        /// <summary>
+        /// Esta funcion implementa lo que en el artículo se denomina Sm(p,q)
+        /// </summary>
+        /// <param name="q"></param>
+        /// <returns></returns>
         public double parecidos_en_vecinos(Minucia q)
         {
             double num = (vecinos.Count + 1) * (q.vecinos.Count + 1);
-            return 0;
+            int Mp = 0, Mq = 0;
+
+            foreach (Minucia m in vecinos)
+            {
+                if (Podemos_hacer_match(m))
+                    Mp++;
+            }
+            Mp++;
+
+            foreach (Minucia m in q.vecinos)
+            {
+                if (q.Podemos_hacer_match(m))
+                    Mq++;
+            }
+            Mq++;
+
+            return num/(Mp*Mq);
+        }
+        /// <summary>
+        /// Comprueba si de cumplen las condiciones necesarias y suficientes para decir que una minucia es buena.
+        /// </summary>
+        /// <param name="q"></param>
+        /// <returns></returns>
+        private bool Podemos_hacer_match(Minucia q)
+        {
+            return es_real(q) && !esta_oculta(q) && esta_dentro_radio(q);
+        }
+
+        private bool es_real(Minucia q)
+        {
+//            pi is an unreliable minutia. An example is shown in Fig.
+//4(a) to illustrate this case.
+
+            return true;
+        }
+        private bool esta_oculta(Minucia q)
+        {
+//            pi is located at the occluded region of template fingerprint.
+//An example is shown in Fig. 4(b) to illustrate this case.
+
+            return false;
+        }
+        /// <summary>
+        /// Comprueba si una minucia q está en el radio de acción de una minucia p
+        /// </summary>
+        /// <param name="q"></param>
+        /// <returns></returns>
+        private bool esta_dentro_radio(Minucia q)
+        {
+            Atributos atr = Atributos.getInstance();
+
+            int difx = x - q.x, dify = y - q.y;
+            double distancia = Math.Sqrt(difx * difx + dify * dify);
+
+            return distancia <= (0.8 * atr.distanciaPixel_entreMinucias);
         }
         /// <summary>
         /// To determine the order in which to insert correspondences,
