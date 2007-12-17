@@ -31,6 +31,7 @@ namespace kernel
         public double w;
         public int tamEntornoPunto;
         public int numEjemplos;
+        public int distanciaPixel_entreMinucias = 60;
 
         //atributos para el descriptor de minucia
 
