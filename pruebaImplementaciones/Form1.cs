@@ -122,6 +122,8 @@ namespace pruebaImplementaciones
             atr.colorPixelCercano = Color.Brown;
             atr.colorLinea = Color.Red;
             atr.colorRellenoFinPixelCercano = Brushes.Fuchsia;
+            atr.colorCirculo = Color.Green;
+            atr.colorCruz = Color.Red;
 
             atr.maxLongitudBuqueda = 30;
 
@@ -135,6 +137,7 @@ namespace pruebaImplementaciones
 
             atr.tamEntornoPunto = 5;
             atr.numEjemplos = 3;
+            atr.radioVecinos = 60;
 
             // El mínimo ha de ser 12
             atr.longitudLinea = 20;

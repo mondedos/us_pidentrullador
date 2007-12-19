@@ -20,7 +20,6 @@ namespace kernel
         public Circulo[] circulos = null;
 
         public List<Minucia> vecinos;
-        public Descriptor_base descriptor;
 
         // Pongo esto como entero porque los enum no me dejaba declararlos estáticos
         // y tengo que referenciarlos desde fuera a la hora de llamar al constructor
@@ -59,10 +58,20 @@ namespace kernel
                 circulos[i] = new Circulo(i, angulo, atr.radiosL[i], atr.puntosK[i], this);
             }
 
-            descriptor = new Descriptor_base(this);
             vecinos = new List<Minucia>();
         }
 
+        public void agregarVecinos(List<Minucia> listaMinucias)
+        {
+            Atributos atr = Atributos.getInstance();
+            vecinos = new List<Minucia>();
+
+            foreach (Minucia minucia in listaMinucias)
+                if (this != minucia && Funcion.distancia(this.x,this.y,minucia.x,minucia.y) <= atr.radioVecinos)
+                    this.vecinos.Add(minucia);
+        }
+
+        /*
 
         public void Calcular_Conjunto_Descriptor_Base()
         {
@@ -118,15 +127,15 @@ namespace kernel
 
         private bool es_real(Minucia q)
         {
-//            pi is an unreliable minutia. An example is shown in Fig.
-//4(a) to illustrate this case.
+        //            pi is an unreliable minutia. An example is shown in Fig.
+        //4(a) to illustrate this case.
 
             return true;
         }
         private bool esta_oculta(Minucia q)
         {
-//            pi is located at the occluded region of template fingerprint.
-//An example is shown in Fig. 4(b) to illustrate this case.
+        //            pi is located at the occluded region of template fingerprint.
+        //An example is shown in Fig. 4(b) to illustrate this case.
 
             return false;
         }
@@ -182,5 +191,7 @@ namespace kernel
         {
             return parecidos_en_vecinos(q);
         }
+         * 
+         */
     }
 }

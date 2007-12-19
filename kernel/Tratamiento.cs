@@ -29,9 +29,10 @@ namespace kernel
         static int compruebaBifurcaciones = 4;
         static int guardaBifurcaciones = 5;
 
-        static int calculaDescriptores = 6;
+        static int muestraDatosTextura = 6;
+        static int muestraDatosMinucia = 7;
 
-        static int totalPasos = 7;
+        static int totalPasos = 8;
 
         public static String [] textoPasos = new String[]{ 
             "Huella original",
@@ -41,7 +42,8 @@ namespace kernel
             "Comprobar bifurcaciones",
             "Chequear bifurcaciones fiables",
             "Mostrar bifurcaciones fiables",
-            "Calcula los descriptores asociados y muestra algunos ejemplos"
+            "Mostrar datos de textura",
+            "Mostrar datos de minucia"
         };
 
         List<TerminacionPotencial> terminacionesPotenciales = new List<TerminacionPotencial>();
@@ -85,7 +87,12 @@ namespace kernel
             comprobarBifurcaciones();
             guardarBifurcaciones();
 
-            calcularDescriptores();
+            // En este punto ya tenemos guardadas todas las minucias
+            // Llamamos a un método auxiliar para actualizar sus minucias vecinas
+            actualizarVecinos();
+
+            mostrarDatosTextura();
+            mostrarDatosMinucia();
         }
 
         /// <summary>
@@ -386,10 +393,16 @@ namespace kernel
             }
         }
 
-        void calcularDescriptores()
+        void actualizarVecinos()
         {
-            this.pasos[calculaDescriptores] = new Bitmap(huella);
-            Graphics g = Graphics.FromImage(pasos[calculaDescriptores]);
+            foreach (Minucia minucia in minucias)
+                minucia.agregarVecinos(minucias);
+        }
+
+        void mostrarDatosTextura()
+        {
+            this.pasos[muestraDatosTextura] = new Bitmap(huella);
+            Graphics g = Graphics.FromImage(pasos[muestraDatosTextura]);
             Atributos atr = Atributos.getInstance();
 
             // Selecciona las minucias que se van a imprimir por pantalla
@@ -433,7 +446,7 @@ namespace kernel
                 {
                     foreach (Circulo circulo in minucia.circulos)
                     {                    
-                        g.DrawEllipse(new Pen(Color.Green), 
+                        g.DrawEllipse(new Pen(atr.colorCirculo), 
                             minucia.x - circulo.radio, minucia.y - circulo.radio, circulo.radio*2, circulo.radio*2);
 
                         foreach (Punto punto in circulo.puntos)
@@ -451,6 +464,81 @@ namespace kernel
 
                 numMinucia++;
             }
+        }
+
+        void mostrarDatosMinucia()
+        {
+            this.pasos[muestraDatosMinucia] = new Bitmap(huella);
+            Graphics g = Graphics.FromImage(pasos[muestraDatosMinucia]);
+            Atributos atr = Atributos.getInstance();
+
+            // Selecciona las minucias que se van a imprimir por pantalla
+            int numMinucia = 0;
+            Random r = new Random();
+            List<int> lista = new List<int>();
+            for (int i = 0; i < atr.numEjemplos; i++)
+                lista.Add(r.Next(minucias.Count));
+
+            foreach (Minucia minucia in minucias)
+            {
+                Color cFiable = Color.Black;
+                Color cPocoFiable = Color.Black;
+
+                switch (minucia.tipo)
+                {
+                    case Minucia.Terminacion: cFiable = atr.colorTerminacionFiable;
+                        cPocoFiable = atr.colorTerminacionPocoFiable;
+                        break;
+                    case Minucia.Bifurcacion: cFiable = atr.colorBifurcacionFiable;
+                        cPocoFiable = atr.colorBifurcacionPocoFiable;
+                        break;
+                }
+
+                switch (minucia.fiabilidad)
+                {
+                    case Minucia.Fiable:
+                        g.DrawEllipse(new Pen(cFiable),
+                                minucia.x - atr.radioCirculo / 2, minucia.y - atr.radioCirculo / 2,
+                                atr.radioCirculo, atr.radioCirculo);
+
+                        break;
+                    case Minucia.PocoFiable:
+                        g.DrawRectangle(new Pen(cPocoFiable),
+                            minucia.x - atr.radioCirculo / 2, minucia.y - atr.radioCirculo / 2,
+                            atr.radioCirculo, atr.radioCirculo);
+                        break;
+                }
+
+                if (seEncuentraEnLista(lista, numMinucia))
+                {
+                    
+                    g.DrawEllipse(new Pen(atr.colorCirculo),
+                                minucia.x - atr.radioVecinos, minucia.y - atr.radioVecinos,
+                                atr.radioVecinos*2, atr.radioVecinos*2);
+
+                    foreach(Minucia m in minucia.vecinos)
+                        g.FillEllipse(atr.colorRellenoFinPixelCercano,
+                                    m.x - atr.radioCirculo / 4, m.y - atr.radioCirculo / 4,
+                                    atr.radioCirculo/2, atr.radioCirculo/2);
+
+                    dibujaCruz(g, minucia);
+                }
+
+                numMinucia++;
+            }
+        }
+
+        void dibujaCruz(Graphics g, Minucia minucia)
+        {
+            Atributos atr = Atributos.getInstance();
+
+            g.DrawLine(new Pen(atr.colorCruz),
+                minucia.x - atr.radioCirculo / 2, minucia.y - atr.radioCirculo / 2,
+                minucia.x + atr.radioCirculo / 2, minucia.y + atr.radioCirculo / 2);
+
+            g.DrawLine(new Pen(atr.colorCruz),
+                minucia.x - atr.radioCirculo / 2, minucia.y + atr.radioCirculo / 2,
+                minucia.x + atr.radioCirculo / 2, minucia.y - atr.radioCirculo / 2);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////

@@ -19,6 +19,8 @@ namespace kernel
         public Color colorMinuciaNoFiable;
         public Color colorLinea;
         public Color colorPixelCercano;
+        public Color colorCirculo;
+        public Color colorCruz;
 
         public Brush colorRellenoFinPixelCercano;
 
@@ -31,7 +33,9 @@ namespace kernel
         public double w;
         public int tamEntornoPunto;
         public int numEjemplos;
-        public int distanciaPixel_entreMinucias = 60;
+
+        //atributos para el descriptor de minucia
+        public int radioVecinos;
 
         //atributos para el descriptor de minucia
 
