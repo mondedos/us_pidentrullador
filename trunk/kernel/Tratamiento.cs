@@ -29,11 +29,13 @@ namespace kernel
         static int compruebaBifurcaciones = 4;
         static int guardaBifurcaciones = 5;
 
-        static int muestraDatosTextura = 6;
-        static int muestraDatosMinucia = 7;
+        static int muestraTodasMinucias = 6;
+        static int muestraDatosTextura = 7;
+        static int muestraDatosMinucia = 8;
 
-        static int totalPasos = 8;
+        static int totalPasos = 9;
 
+        // Su tamaño es totalPasos + 1
         public static String [] textoPasos = new String[]{ 
             "Huella original",
             "Comprobar terminaciones",
@@ -42,8 +44,9 @@ namespace kernel
             "Comprobar bifurcaciones",
             "Chequear bifurcaciones fiables",
             "Mostrar bifurcaciones fiables",
-            "Mostrar datos de textura",
-            "Mostrar datos de minucia"
+            "Mostrar todas las minucias encontrada",
+            "Mostrar datos relativos al descriptor de textura",
+            "Mostrar datos relativos al descriptor de minucia"
         };
 
         List<TerminacionPotencial> terminacionesPotenciales = new List<TerminacionPotencial>();
@@ -57,7 +60,7 @@ namespace kernel
         List<Point> bifurcacionesPocoFiables = new List<Point>();
         List<Point> bifurcacionesNoFiables = new List<Point>();
 
-        List<Minucia> minucias = new List<Minucia>();
+        public List<Minucia> minucias = new List<Minucia>();
 
         /// <summary>
         /// Aplica los agoritmos de busqueda de terminaciones y bifurcaciones
@@ -91,6 +94,7 @@ namespace kernel
             // Llamamos a un método auxiliar para actualizar sus minucias vecinas
             actualizarVecinos();
 
+            mostrarTodasMinucias();
             mostrarDatosTextura();
             mostrarDatosMinucia();
         }
@@ -393,24 +397,11 @@ namespace kernel
             }
         }
 
-        void actualizarVecinos()
+        void mostrarTodasMinucias()
         {
-            foreach (Minucia minucia in minucias)
-                minucia.agregarVecinos(minucias);
-        }
-
-        void mostrarDatosTextura()
-        {
-            this.pasos[muestraDatosTextura] = new Bitmap(huella);
-            Graphics g = Graphics.FromImage(pasos[muestraDatosTextura]);
+            this.pasos[muestraTodasMinucias] = new Bitmap(huella);
+            Graphics g = Graphics.FromImage(pasos[muestraTodasMinucias]);
             Atributos atr = Atributos.getInstance();
-
-            // Selecciona las minucias que se van a imprimir por pantalla
-            int numMinucia = 0;
-            Random r = new Random();
-            List<int> lista = new List<int>();
-            for (int i = 0; i < atr.numEjemplos; i++)
-                lista.Add(r.Next(minucias.Count));
 
             foreach (Minucia minucia in minucias)
             {
@@ -441,9 +432,28 @@ namespace kernel
                             atr.radioCirculo, atr.radioCirculo); 
                     break;
                 }
-                
+            }
+        }
+
+        void mostrarDatosTextura()
+        {
+            this.pasos[muestraDatosTextura] = new Bitmap(this.pasos[muestraTodasMinucias]);
+            Graphics g = Graphics.FromImage(pasos[muestraDatosTextura]);
+            Atributos atr = Atributos.getInstance();
+
+            // Selecciona las minucias que se van a imprimir por pantalla
+            int numMinucia = 0;
+            Random r = new Random();
+            List<int> lista = new List<int>();
+            for (int i = 0; i < atr.numEjemplos; i++)
+                lista.Add(r.Next(minucias.Count));
+
+            foreach (Minucia minucia in minucias)
+            {               
                 if (seEncuentraEnLista(lista, numMinucia))
                 {
+                    dibujaCruz(g, minucia);
+
                     foreach (Circulo circulo in minucia.circulos)
                     {                    
                         g.DrawEllipse(new Pen(atr.colorCirculo), 
@@ -468,7 +478,7 @@ namespace kernel
 
         void mostrarDatosMinucia()
         {
-            this.pasos[muestraDatosMinucia] = new Bitmap(huella);
+            this.pasos[muestraDatosMinucia] = new Bitmap(this.pasos[muestraTodasMinucias]);
             Graphics g = Graphics.FromImage(pasos[muestraDatosMinucia]);
             Atributos atr = Atributos.getInstance();
 
@@ -480,48 +490,24 @@ namespace kernel
                 lista.Add(r.Next(minucias.Count));
 
             foreach (Minucia minucia in minucias)
-            {
-                Color cFiable = Color.Black;
-                Color cPocoFiable = Color.Black;
-
-                switch (minucia.tipo)
-                {
-                    case Minucia.Terminacion: cFiable = atr.colorTerminacionFiable;
-                        cPocoFiable = atr.colorTerminacionPocoFiable;
-                        break;
-                    case Minucia.Bifurcacion: cFiable = atr.colorBifurcacionFiable;
-                        cPocoFiable = atr.colorBifurcacionPocoFiable;
-                        break;
-                }
-
-                switch (minucia.fiabilidad)
-                {
-                    case Minucia.Fiable:
-                        g.DrawEllipse(new Pen(cFiable),
-                                minucia.x - atr.radioCirculo / 2, minucia.y - atr.radioCirculo / 2,
-                                atr.radioCirculo, atr.radioCirculo);
-
-                        break;
-                    case Minucia.PocoFiable:
-                        g.DrawRectangle(new Pen(cPocoFiable),
-                            minucia.x - atr.radioCirculo / 2, minucia.y - atr.radioCirculo / 2,
-                            atr.radioCirculo, atr.radioCirculo);
-                        break;
-                }
-
+            {            
                 if (seEncuentraEnLista(lista, numMinucia))
                 {
-                    
+
+                    dibujaCruz(g, minucia);
+
                     g.DrawEllipse(new Pen(atr.colorCirculo),
                                 minucia.x - atr.radioVecinos, minucia.y - atr.radioVecinos,
                                 atr.radioVecinos*2, atr.radioVecinos*2);
 
-                    foreach(Minucia m in minucia.vecinos)
+                    foreach (Minucia m in minucia.vecinos)
+                    {
                         g.FillEllipse(atr.colorRellenoFinPixelCercano,
                                     m.x - atr.radioCirculo / 4, m.y - atr.radioCirculo / 4,
-                                    atr.radioCirculo/2, atr.radioCirculo/2);
+                                    atr.radioCirculo / 2, atr.radioCirculo / 2);
 
-                    dibujaCruz(g, minucia);
+                        //g.DrawLine(new Pen(Color.Red), minucia.x, minucia.y, m.x, m.y);
+                    }
                 }
 
                 numMinucia++;
@@ -539,11 +525,25 @@ namespace kernel
             g.DrawLine(new Pen(atr.colorCruz),
                 minucia.x - atr.radioCirculo / 2, minucia.y + atr.radioCirculo / 2,
                 minucia.x + atr.radioCirculo / 2, minucia.y - atr.radioCirculo / 2);
+
+            g.DrawRectangle(new Pen(atr.colorCruz),
+                minucia.x - atr.radioCirculo / 2, minucia.y - atr.radioCirculo / 2,
+                atr.radioCirculo, atr.radioCirculo);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////
         // De ahí para abajo son funciones auxiliares
         ////////////////////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// Actualiza los vecinos de una minucia dada
+        /// Ha de ser llamado cuando se han encontrado todas las minucias
+        /// </summary>
+        void actualizarVecinos()
+        {
+            foreach (Minucia minucia in minucias)
+                minucia.agregarVecinos(minucias);
+        }
 
         /// <summary>
         /// Devuelve un array de los dos pixeles cercanos a uno dado que son negros y no son él mismo
