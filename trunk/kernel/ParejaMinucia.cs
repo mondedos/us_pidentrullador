@@ -239,6 +239,9 @@ namespace kernel
             }
         }
 
+        /// <summary>
+        /// REVISAR, SEGURAMENTE ESTARÁ MAL HECHA
+        /// </summary>
         class TransformacionT
         {
             int difx;
