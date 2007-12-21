@@ -121,4 +121,7 @@
   <data name="huella" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\huella.GIF;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="huella2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\huella2.GIF;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

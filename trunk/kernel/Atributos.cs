@@ -24,20 +24,18 @@ namespace kernel
 
         public Brush colorRellenoFinPixelCercano;
 
-        //atributos para el descriptor de textura
         public int minPasosAntesDeBuscarPunto;
         public int longitudLinea;
         public int maxLongitudBuqueda;
         public int[] radiosL;
         public int[] puntosK;
         public double w;
+        public int minPorcentajeValidos;
         public int tamEntornoPunto;
         public int numEjemplos;
-
-        //atributos para el descriptor de minucia
         public int radioVecinos;
-
-        //atributos para el descriptor de minucia
+        public double maxDistancia;
+        public int radioEncaje;
 
         static object o = new object();
 

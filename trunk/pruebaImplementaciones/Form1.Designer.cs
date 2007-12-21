@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.cargar = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.ejecutar = new System.Windows.Forms.Button();
@@ -38,17 +38,19 @@
             this.siguiente = new System.Windows.Forms.Button();
             this.anterior = new System.Windows.Forms.Button();
             this.textoPaso = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
-            // pictureBox
+            // pictureBox1
             // 
-            this.pictureBox.Location = new System.Drawing.Point(32, 51);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(512, 512);
-            this.pictureBox.TabIndex = 0;
-            this.pictureBox.TabStop = false;
+            this.pictureBox1.Location = new System.Drawing.Point(32, 51);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(512, 512);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // cargar
             // 
@@ -94,13 +96,13 @@
             this.trackBar.Location = new System.Drawing.Point(71, 617);
             this.trackBar.Maximum = 0;
             this.trackBar.Name = "trackBar";
-            this.trackBar.Size = new System.Drawing.Size(434, 42);
+            this.trackBar.Size = new System.Drawing.Size(952, 42);
             this.trackBar.TabIndex = 4;
             this.trackBar.ValueChanged += new System.EventHandler(this.trackBar_ValueChanged);
             // 
             // siguiente
             // 
-            this.siguiente.Location = new System.Drawing.Point(511, 617);
+            this.siguiente.Location = new System.Drawing.Point(1029, 628);
             this.siguiente.Name = "siguiente";
             this.siguiente.Size = new System.Drawing.Size(33, 23);
             this.siguiente.TabIndex = 5;
@@ -121,7 +123,7 @@
             // textoPaso
             // 
             this.textoPaso.AutoSize = true;
-            this.textoPaso.Location = new System.Drawing.Point(121, 578);
+            this.textoPaso.Location = new System.Drawing.Point(150, 578);
             this.textoPaso.Name = "textoPaso";
             this.textoPaso.Size = new System.Drawing.Size(78, 13);
             this.textoPaso.TabIndex = 7;
@@ -129,11 +131,20 @@
             this.textoPaso.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.textoPaso.Click += new System.EventHandler(this.label1_Click);
             // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Location = new System.Drawing.Point(550, 51);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(512, 512);
+            this.pictureBox2.TabIndex = 8;
+            this.pictureBox2.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(568, 663);
+            this.ClientSize = new System.Drawing.Size(1094, 663);
+            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.textoPaso);
             this.Controls.Add(this.anterior);
             this.Controls.Add(this.siguiente);
@@ -141,14 +152,15 @@
             this.Controls.Add(this.reset);
             this.Controls.Add(this.ejecutar);
             this.Controls.Add(this.cargar);
-            this.Controls.Add(this.pictureBox);
+            this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Prueba Implementaciones";
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -156,7 +168,7 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox;
+        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button cargar;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Button ejecutar;
@@ -166,6 +178,7 @@
         private System.Windows.Forms.Button siguiente;
         private System.Windows.Forms.Button anterior;
         private System.Windows.Forms.Label textoPaso;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }
 

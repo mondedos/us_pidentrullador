@@ -7,6 +7,14 @@ namespace kernel
 {
     class Funcion
     {
+        public static double anguloEntrePuntos(int x1, int y1, int x2, int y2)
+        {
+            int difx = x2 - x1;
+            int dify = y2 - y1;
+
+            return Math.Asin((double)dify / Math.Sqrt(difx * difx + dify * dify));
+        }
+
         public static int distancia(int x1, int y1, int x2, int y2)
         {
             return (int)(Math.Sqrt(
@@ -16,6 +24,12 @@ namespace kernel
                                     )
                         );
 
+        }
+
+        public static double recortarDigitos(double num, int numDigitos)
+        {
+            double factor = Math.Pow(10, numDigitos);
+            return ((double)((int)(num * factor))) / factor;
         }
 
         public static bool EsBlanco(Color c)

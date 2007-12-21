@@ -38,11 +38,12 @@
     <Compile Include="Atributos.cs" />
     <Compile Include="BifurcacionPotencial.cs" />
     <Compile Include="Circulo.cs" />
-    <Compile Include="Descriptor_base.cs" />
+    <Compile Include="Emparejador.cs" />
     <Compile Include="Funcion.cs" />
     <Compile Include="GreedyMatch.cs" />
     <Compile Include="Matriz.cs" />
     <Compile Include="Minucia.cs" />
+    <Compile Include="ParejaMinucia.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Punto.cs" />
     <Compile Include="TerminacionPotencial.cs" />
