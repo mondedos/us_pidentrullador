@@ -68,11 +68,11 @@ namespace kernel
         /// </summary>
         /// <param name="huella"></param>
         /// <param name="atr"></param>
-        public Tratamiento(Bitmap huella, Atributos atr)
+        public Tratamiento(Bitmap huella)
         {
             this.pasos = new Bitmap[totalPasos];
             this.huella = new Bitmap(huella);
-
+            
             this.matriz = Adaptador.Adaptar(this.huella);
             this.filas = huella.Width;
             this.cols = huella.Height;
@@ -92,6 +92,7 @@ namespace kernel
 
             // En este punto ya tenemos guardadas todas las minucias
             // Llamamos a un método auxiliar para actualizar sus minucias vecinas
+            // También actualizamos los índices de cada minucia
             actualizarVecinos();
 
             mostrarTodasMinucias();
@@ -541,8 +542,12 @@ namespace kernel
         /// </summary>
         void actualizarVecinos()
         {
+            int i = 0;
             foreach (Minucia minucia in minucias)
+            {
+                minucia.indice = i++;
                 minucia.agregarVecinos(minucias);
+            }
         }
 
         /// <summary>
