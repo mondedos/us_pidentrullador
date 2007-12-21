@@ -4,7 +4,7 @@ using System.Text;
 
 namespace kernel
 {
-    class ParejaMinucia
+    public class ParejaMinucia
     {
         public Minucia minucia1;
         public Minucia minucia2;

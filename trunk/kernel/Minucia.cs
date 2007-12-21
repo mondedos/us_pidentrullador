@@ -73,6 +73,11 @@ namespace kernel
             foreach (Minucia minucia in listaMinucias)
                 if (this != minucia && Funcion.distancia(this.x,this.y,minucia.x,minucia.y) <= atr.radioVecinos)
                     this.vecinos.Add(minucia);
-        }   
+        }
+
+        public override string ToString()
+        {
+            return "<" + indice + ":" + x + "," + y + ">";
+        }
     }
 }

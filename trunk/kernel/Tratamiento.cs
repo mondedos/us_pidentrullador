@@ -21,23 +21,22 @@ namespace kernel
         /// <summary>
         /// Estos atributos se utilizan para indexar los pasos
         /// </summary>
-        static int busquedaTerminaciones = 0;
-        static int compruebaTerminaciones = 1;
-        static int guardaTerminaciones = 2;
-        
-        static int busquedaBifurcaciones = 3;
-        static int compruebaBifurcaciones = 4;
-        static int guardaBifurcaciones = 5;
+        public static int busquedaTerminaciones = 0;
+        public static int compruebaTerminaciones = 1;
+        public static int guardaTerminaciones = 2;
 
-        static int muestraTodasMinucias = 6;
-        static int muestraDatosTextura = 7;
-        static int muestraDatosMinucia = 8;
+        public static int busquedaBifurcaciones = 3;
+        public static int compruebaBifurcaciones = 4;
+        public static int guardaBifurcaciones = 5;
 
-        static int totalPasos = 9;
+        public static int muestraTodasMinucias = 6;
+        public static int muestraDatosTextura = 7;
+        public static int muestraDatosMinucia = 8;
+
+        public static int totalPasos = 9;
 
         // Su tamaño es totalPasos + 1
         public static String [] textoPasos = new String[]{ 
-            "Huella original",
             "Comprobar terminaciones",
             "Chequear terminaciones fiables",
             "Mostrar terminaciones fiables",
@@ -46,7 +45,8 @@ namespace kernel
             "Mostrar bifurcaciones fiables",
             "Mostrar todas las minucias encontrada",
             "Mostrar datos relativos al descriptor de textura",
-            "Mostrar datos relativos al descriptor de minucia"
+            "Mostrar datos relativos al descriptor de minucia",
+            "Mostrar correspondencias de minucias fiables"
         };
 
         List<TerminacionPotencial> terminacionesPotenciales = new List<TerminacionPotencial>();
