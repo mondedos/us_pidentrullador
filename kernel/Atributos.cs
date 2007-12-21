@@ -36,6 +36,7 @@ namespace kernel
         public int radioVecinos;
         public double maxDistancia;
         public int radioEncaje;
+        public double umbralAngulo;
 
         static object o = new object();
 
