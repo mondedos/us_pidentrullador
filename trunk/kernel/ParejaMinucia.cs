@@ -278,8 +278,8 @@ namespace kernel
 
                 foreach (MinuciaParcial mp in listaOriginal)
                 {
-                    double nx = (double)difx * Math.Cos(difa) + (double)dify * Math.Sin(difa) + difx;
-                    double ny = (double)difx * -Math.Sin(difa) + (double)dify * Math.Cos(difa) + dify;
+                    double nx = (double)mp.minucia.x * Math.Cos(difa) + (double)mp.minucia.y * Math.Sin(difa) + difx;
+                    double ny = (double)mp.minucia.x * -Math.Sin(difa) + (double)mp.minucia.y * Math.Cos(difa) + dify;
                     double na = mp.teta - difa;
 
                     listaNueva.Add(new MinuciaParcial(mp.minucia, mp.minuciaCentral, (int)nx, (int)ny, na));
