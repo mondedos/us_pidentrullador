@@ -24,9 +24,11 @@ namespace kernel
 
         // Lista de parejas de minucia normalizadas
         List<ParejaMinuciaNormalizada> normalizadas;
+        public ParejaMinuciaNormalizada[] vectorParejas;
 
         // Array de parejas normalizadas en orden
-        public ParejaMinuciaNormalizada [] vectorParejas;
+        public ParejaMinuciaNormalizada inicial;
+        public ParAlineado [] parejas;
 
         // Lista final de correspondencias obtenidas entre huellas
         public List<Correspondencia> correspondencias;
@@ -54,11 +56,8 @@ namespace kernel
         {
             this.arrayParejas = new ParejaMinucia[N1, N2];
 
-            int i, j;
-
-            for (i = 0; i < N1; i++)
-                for (j = 0; j < N2; j++)
-                    this.arrayParejas[i, j] = colocaEnPosicion(parejasMinucias, i, j);
+            foreach (ParejaMinucia pm in parejasMinucias)
+                this.arrayParejas[pm.minucia1.indice, pm.minucia2.indice] = pm;
         }
 
         void calcularDescriptoresNormalizados()
@@ -80,6 +79,7 @@ namespace kernel
                         divisor2 += arrayParejas[i, k].sc;
 
                     double cociente = 0;
+                    
                     double divisor = divisor1 + divisor2 - arrayParejas[i, j].sc;
 
                     if (divisor == 0)
@@ -97,9 +97,20 @@ namespace kernel
         /// </summary>
         void generarCorrespondenciasEnOrden()
         {
-            this.vectorParejas = normalizadas.ToArray();
-            Array.Sort(this.vectorParejas);
-            Array.Reverse(this.vectorParejas);
+            Atributos atr = Atributos.getInstance();
+
+            //las que tienen una rotación relativa mayor que un umbral las desechamos
+            foreach (ParejaMinuciaNormalizada pmn in normalizadas)
+                if (pmn.pm.rotacionRelativa > atr.umbralAngulo)
+                    pmn.sn = 0;
+
+            vectorParejas = normalizadas.ToArray();
+            Array.Sort(vectorParejas);
+            Array.Reverse(vectorParejas);
+
+            TransformacionT trans = new TransformacionT(vectorParejas);
+            this.inicial = trans.inicial;
+            this.parejas = trans.parejas;
         }
 
         void algoritmo()
@@ -116,61 +127,36 @@ namespace kernel
             for (j = 0; j < N2; j++)
                 flagJ[j] = false;
 
-            ParejaMinuciaNormalizada primera = vectorParejas[0];
-            flagI[primera.i] = true;
-            flagJ[primera.j] = true;
+            flagI[inicial.i] = true;
+            flagJ[inicial.j] = true;
 
             for (k = 1; k < N1 * N2; k++)
             {
-                i = vectorParejas[k].i;
-                j = vectorParejas[k].j;
+                i = parejas[k].minucia1.indice;
+                j = parejas[k].minucia2.indice;
 
-                if (!flagI[i] && !flagJ[j] && sonEncajables(vectorParejas[k],primera))
+                bool encajan = sonEncajables(parejas[k]);
+
+                if (!flagI[i] && !flagJ[j] && encajan)
                 {
                     flagI[i] = true;
                     flagJ[j] = true;
                     correspondencias.Add(
-                        new Correspondencia(vectorParejas[k].pm.minucia1, vectorParejas[k].pm.minucia2));
+                        new Correspondencia(parejas[k].minucia1, parejas[k].minucia2));
                 }
             }
         }
 
-        bool sonEncajables(ParejaMinuciaNormalizada pmn, ParejaMinuciaNormalizada primera)
+        bool sonEncajables(ParAlineado pa)
         {
             Atributos atr = Atributos.getInstance();
 
-            double distancia = Funcion.distancia(pmn.pm.minucia1.x, pmn.pm.minucia1.y,
-                                                 pmn.pm.minucia2.x, pmn.pm.minucia2.y);
+            double distancia = Funcion.distancia(pa.xT, pa.yT, pa.xDestino, pa.yDestino);
 
-            bool cercanosEnDistancia = distancia <= atr.radioEncaje;
-
-            // ????????
+            bool cercanosEnDistancia = distancia <= (double)atr.radioEncaje;
             bool diferenciaDireccionPequeña = true;
 
             return cercanosEnDistancia && diferenciaDireccionPequeña;
-        }
-
-        /// <summary>
-        /// Devuelve de la lista la pareja con las minucias de indices iesimos y jesimos
-        /// </summary>
-        /// <param name="parejasMinucias"></param>
-        /// <param name="i"></param>
-        /// <param name="j"></param>
-        /// <returns></returns>
-        ParejaMinucia colocaEnPosicion(List<ParejaMinucia> parejasMinucias, int i, int j)
-        {
-            ParejaMinucia temp = null;
-
-            foreach (ParejaMinucia pareja in parejasMinucias)
-            {
-                if (pareja.minucia1.indice == i && pareja.minucia2.indice == j)
-                {
-                    temp = pareja;
-                    break;
-                }
-            }
-
-            return temp;
         }
     }
 }

@@ -18,6 +18,9 @@ namespace kernel
         // descriptor combinado
         public double sc;
 
+        // rotación relativa
+        public double rotacionRelativa;
+
         public bool esDescriptorTexturaRelevante;
         double porcentajePuntosTextura;
 
@@ -36,6 +39,7 @@ namespace kernel
             calcularDescriptorTextura();
             calcularDescriptorMinucia();
 
+            this.rotacionRelativa = m2.angulo - m1.angulo;
             this.sc = this.st * this.sm;
         }
 
@@ -171,225 +175,6 @@ namespace kernel
             double dividendo = (double)3;
             double cociente = divisor / dividendo;
             return Math.Exp(-cociente);
-        }
-
-        class TexturaParcial
-        {
-            public double s0;
-            public double sf;
-
-            public TexturaParcial(double s0, double sf)
-            {
-                this.s0 = s0;
-                this.sf = sf;
-            }
-        }
-
-        class MinuciaParcial
-        {
-            public int x;
-            public int y;
-            public double teta;
-
-            public Minucia minuciaCentral;
-            public Minucia minucia;
-
-            public bool encaja;
-            public bool deberiaEncajar;
-
-            /// <summary>
-            /// Constructor aplicado cuando queremos guardar la relación de vecindad
-            /// entre una minucia y su minucia asociada central
-            /// </summary>
-            /// <param name="minucia"></param>
-            /// <param name="minuciaCentral"></param>
-            public MinuciaParcial(Minucia minucia, Minucia minuciaCentral)
-            {
-                this.minucia = minucia;
-                this.minuciaCentral = minuciaCentral;
-
-                this.x = minucia.x;
-                this.y = minucia.y;
-                this.teta = Funcion.anguloEntrePuntos(minuciaCentral.x, minuciaCentral.y, minucia.x, minucia.y);
-
-                this.encaja = false;
-                this.deberiaEncajar = false;
-            }
-
-            /// <summary>
-            /// Constructor aplicado cuando queremos construir una minucia parcial
-            /// aplicándole las coordenadas de una transformada T
-            /// </summary>
-            /// <param name="minucia"></param>
-            /// <param name="minuciaCentral"></param>
-            /// <param name="x"></param>
-            /// <param name="y"></param>
-            /// <param name="teta"></param>
-            public MinuciaParcial(Minucia minucia, Minucia minuciaCentral, int x, int y, double teta)
-            {
-                this.minucia = minucia;
-                this.minuciaCentral = minuciaCentral;
-
-                this.x = x;
-                this.y = y;
-                this.teta = teta;
-
-                this.encaja = false;
-                this.deberiaEncajar = false;
-            }
-        }
-
-        /// <summary>
-        /// REVISAR, SEGURAMENTE ESTARÁ MAL HECHA
-        /// </summary>
-        class TransformacionT
-        {
-            int difx;
-            int dify;
-            double difa;
-            public List<MinuciaParcial> dm_minucia_t;
-
-            /// <summary>
-            /// Minucia1 y Minucia2 son las dos minucias centrales p y q 
-            /// ó q y p correspondientes cada caso
-            /// </summary>
-            /// <param name="minucia1"></param>
-            /// <param name="minucia2"></param>
-            /// <param name="dm_minucia"></param>
-            public TransformacionT(Minucia minucia1, Minucia minucia2, List<MinuciaParcial> dm_minucia)
-            {
-                difx = minucia2.x - minucia1.x;
-                dify = minucia2.y - minucia1.y;
-                difa = Funcion.anguloEntrePuntos(minucia1.x, minucia1.y, minucia2.x, minucia2.y);
-
-                // Conjunto dm(p) habiéndole aplicado la transformación rígida
-                dm_minucia_t = aplicarTransformacionRigida(dm_minucia, difx, dify, difa);
-            }
-
-            /// <summary>
-            /// Aplica la transformada rígida a un conjunto de minucias parciales
-            /// con respecto a los centros de dos minucias centrales
-            /// </summary>
-            /// <param name="listaOriginal"></param>
-            /// <param name="difx"></param>
-            /// <param name="dify"></param>
-            /// <param name="difa"></param>
-            /// <returns></returns>
-            List<MinuciaParcial> aplicarTransformacionRigida(List<MinuciaParcial> listaOriginal, int difx, int dify, double difa)
-            {
-                List<MinuciaParcial> listaNueva = new List<MinuciaParcial>();
-
-                foreach (MinuciaParcial mp in listaOriginal)
-                {
-                    double nx = (double)mp.minucia.x * Math.Cos(difa) + (double)mp.minucia.y * Math.Sin(difa) + difx;
-                    double ny = (double)mp.minucia.x * -Math.Sin(difa) + (double)mp.minucia.y * Math.Cos(difa) + dify;
-                    double na = mp.teta - difa;
-
-                    listaNueva.Add(new MinuciaParcial(mp.minucia, mp.minuciaCentral, (int)nx, (int)ny, na));
-                }
-
-                return listaNueva;
-            }
-        }
-
-        /// <summary>
-        /// Dados dos set de vecinos, establecerá los encajes correspondientes
-        /// para calcular el descriptor de la ParejaMinucia
-        /// </summary>
-        class EncajesMinucia
-        {
-            public int encajan;
-            public int deberianEncajar;
-            public double factor;
-
-            List<MinuciaParcial> origen;
-            List<MinuciaParcial> destino;
-
-            public EncajesMinucia(List<MinuciaParcial> origen, List<MinuciaParcial> destino)
-            {
-                this.factor = 0.0;
-                this.encajan = 0;
-                this.deberianEncajar = 0;
-
-                this.origen = origen;
-                this.destino = destino;
-
-                buscarEncajes();
-                calcularFactor();
-            }
-
-            void buscarEncajes()
-            {
-                foreach (MinuciaParcial mp in origen)
-                {
-                    if (hayAlgunEncaje(mp, destino))
-                    {
-                        mp.encaja = true;
-                        mp.deberiaEncajar = true;
-                    }
-                    else
-                    {
-                        if (mp.minucia.fiabilidad != Minucia.PocoFiable &&
-                            !estaEnRegionOcluida(mp) &&
-                            !estaMuyLejosCentro(mp))
-                            mp.deberiaEncajar = true;
-                    }
-                }
-            }
-
-            void calcularFactor()
-            {
-                int numEncajes = 0;
-                int numDeberiaEncajar = 0;
-
-                foreach (MinuciaParcial mp in origen)
-                {
-                    if (mp.encaja)
-                        numEncajes++;
-
-                    if (mp.deberiaEncajar)
-                        numDeberiaEncajar++;
-                }
-
-                this.factor = ((double)numEncajes + 1) / ((double)numDeberiaEncajar + 1);
-            }
-
-            bool hayAlgunEncaje(MinuciaParcial mp, List<MinuciaParcial> destino)
-            {
-                Atributos atr = Atributos.getInstance();
-                bool encaje = false;
-                
-                foreach (MinuciaParcial mpdestino in destino)
-                {
-                    int dx = mpdestino.minucia.x;
-                    int dy = mpdestino.minucia.y;
-
-                    double distancia = Funcion.distancia(dx, dy, mp.x, mp.y);
-
-                    if (distancia <= atr.radioEncaje)
-                    {
-                        encaje = true;
-                        break;
-                    }
-                }
-
-                return encaje;
-            }
-
-            bool estaEnRegionOcluida(MinuciaParcial mp)
-            {
-                return true;
-            }
-
-            bool estaMuyLejosCentro(MinuciaParcial mp)
-            {
-                Atributos atr = Atributos.getInstance();
-
-                double maxDistancia = atr.maxDistancia * atr.radioVecinos;
-                double distancia = Funcion.distancia(mp.minuciaCentral.x, mp.minuciaCentral.y, mp.minucia.x, mp.minucia.y);
-
-                return distancia > maxDistancia;
-            }
         }
     }
 }
