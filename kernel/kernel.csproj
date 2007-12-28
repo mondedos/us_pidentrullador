@@ -40,15 +40,20 @@
     <Compile Include="Circulo.cs" />
     <Compile Include="Correspondencia.cs" />
     <Compile Include="Emparejador.cs" />
+    <Compile Include="EncajesMinucia.cs" />
     <Compile Include="Funcion.cs" />
     <Compile Include="GreedyMatch.cs" />
     <Compile Include="Matriz.cs" />
     <Compile Include="Minucia.cs" />
+    <Compile Include="MinuciaParcial.cs" />
+    <Compile Include="ParAlineado.cs" />
     <Compile Include="ParejaMinucia.cs" />
     <Compile Include="ParejaMinuciaNormalizada.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Punto.cs" />
     <Compile Include="TerminacionPotencial.cs" />
+    <Compile Include="TexturaParcial.cs" />
+    <Compile Include="TransformacionT.cs" />
     <Compile Include="Tratamiento.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
