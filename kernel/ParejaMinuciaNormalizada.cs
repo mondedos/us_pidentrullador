@@ -33,7 +33,7 @@ namespace kernel
 
         public override string ToString()
         {
-            return "sn<" + Funcion.recortarDigitos(sn, 3) + ">\t-\t<" + i + "," + j + ">";
+            return "sn<" + Funcion.recortarDigitos(sn, 3) + ">\t-\t<" + Funcion.intBien(i) + "-" + Funcion.intBien(j) + ">";
         }
     }
 }

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // La información general sobre un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos atributos para modificar la información
 // asociada con un ensamblado.
-[assembly: AssemblyTitle("pruebaImplementaciones")]
+[assembly: AssemblyTitle("Tratamiento de Huellas de Dactilares")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ETSII")]
-[assembly: AssemblyProduct("pruebaImplementaciones")]
-[assembly: AssemblyCopyright("© ETSII 2007")]
+[assembly: AssemblyCompany("PID")]
+[assembly: AssemblyProduct("Tratamiento de Huellas de Dactilares")]
+[assembly: AssemblyCopyright("PID 2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // El siguiente GUID sirve como identificador de la biblioteca de tipos si este proyecto se expone a COM
-[assembly: Guid("a78b42d4-8561-4bad-8b08-a3615b74a48f")]
+[assembly: Guid("346d0898-00e6-4c90-9ae2-149e1f344b32")]
 
 // La información de versión de un ensamblado consta de los cuatro valores siguientes:
 //

@@ -1,0 +1,169 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5A53408B-2995-4472-8000-9C70D0E6805E}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TratamientoHuellasDactilares</RootNamespace>
+    <AssemblyName>TratamientoHuellasDactilares</AssemblyName>
+    <ApplicationIcon>computer.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AForge, Version=1.5.0.0, Culture=neutral, PublicKeyToken=75f8e82c5042a70f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Archivos de programa\AForge.NET\Release\AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Imaging, Version=1.5.1.0, Culture=neutral, PublicKeyToken=38eb47741dd0492e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Archivos de programa\AForge.NET\Release\AForge.Imaging.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Math, Version=1.5.0.0, Culture=neutral, PublicKeyToken=e12ceb15b47eb5cc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Archivos de programa\AForge.NET\Release\AForge.Math.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="kernel\Adaptador.cs" />
+    <Compile Include="kernel\Atributos.cs" />
+    <Compile Include="kernel\BifurcacionPotencial.cs" />
+    <Compile Include="kernel\Circulo.cs" />
+    <Compile Include="kernel\Correspondencia.cs" />
+    <Compile Include="kernel\Emparejador.cs" />
+    <Compile Include="kernel\EncajesMinucia.cs" />
+    <Compile Include="kernel\Funcion.cs" />
+    <Compile Include="kernel\GreedyMatch.cs" />
+    <Compile Include="kernel\Matriz.cs" />
+    <Compile Include="kernel\Minucia.cs" />
+    <Compile Include="kernel\MinuciaParcial.cs" />
+    <Compile Include="kernel\ParAlineado.cs" />
+    <Compile Include="kernel\ParejaMinucia.cs" />
+    <Compile Include="kernel\ParejaMinuciaNormalizada.cs" />
+    <Compile Include="kernel\Punto.cs" />
+    <Compile Include="kernel\Realce.cs" />
+    <Compile Include="kernel\TerminacionPotencial.cs" />
+    <Compile Include="kernel\TexturaParcial.cs" />
+    <Compile Include="kernel\TransformacionT.cs" />
+    <Compile Include="kernel\Tratamiento.cs" />
+    <Compile Include="Principal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Principal.Designer.cs">
+      <DependentUpon>Principal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Principal.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Principal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentanaAcercaDe.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>VentanaAcercaDe.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="VentanaAcercaDe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentanaAcercaDe.Designer.cs">
+      <DependentUpon>VentanaAcercaDe.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Guardar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Abrir.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Nuevo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ejecutar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Primero.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Siguiente.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ultimo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Anterior.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MasDetalles.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MenosDetalles.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FondoHuella.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Agregar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Quitar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Defecto.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="computer.ico" />
+    <None Include="Resources\log.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

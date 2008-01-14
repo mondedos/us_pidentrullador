@@ -7,6 +7,31 @@ namespace kernel
 {
     class Funcion
     {
+        public static String doubleBien(double num)
+        {
+            if (num == 1)
+                return "1.000";
+
+            else if (num == 0)
+                return "0.000";
+
+            else
+                return num.ToString();
+        }
+
+        public static String intBien(int num)
+        {
+            if (num < 10)
+                return "00" + num.ToString();
+
+            else if (num < 100)
+                return "0" + num.ToString();
+
+            else
+                return num.ToString();
+        }
+
+
         public static double anguloEntrePuntos(int x1, int y1, int x2, int y2)
         {
             int difx = x2 - x1;
@@ -26,10 +51,12 @@ namespace kernel
 
         }
 
-        public static double recortarDigitos(double num, int numDigitos)
+        public static String recortarDigitos(double num, int numDigitos)
         {
             double factor = Math.Pow(10, numDigitos);
-            return ((double)((int)(num * factor))) / factor;
+            double res = ((double)((int)(num * factor))) / factor;
+
+            return doubleBien(res);
         }
 
         public static bool EsBlanco(Color c)

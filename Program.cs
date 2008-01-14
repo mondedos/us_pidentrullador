@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace pruebaImplementaciones
+namespace TratamientoHuellasDactilares
 {
     static class Program
     {
@@ -14,7 +14,7 @@ namespace pruebaImplementaciones
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new Principal());
         }
     }
 }

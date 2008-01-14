@@ -116,7 +116,7 @@ namespace kernel
 
         public override String ToString()
         {
-            String s1 = "Par<"+minucia1.indice+","+minucia2.indice+">";
+            String s1 = "Par<"+Funcion.intBien(minucia1.indice)+"-"+Funcion.intBien(minucia2.indice)+">";
             String s2 = "%t<"+Funcion.recortarDigitos(this.porcentajePuntosTextura,0)+">";
             String s3 = "st<"+Funcion.recortarDigitos(this.st,3)+">";
             String s4 = "sm<"+Funcion.recortarDigitos(this.sm,3)+">";

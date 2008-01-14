@@ -6,9 +6,9 @@ namespace kernel
 {
     class TransformacionT
     {
-        int difx;
-        int dify;
-        double difa;
+        public int difx;
+        public int dify;
+        public double difa;
 
         // provenientes de la primera parte
         public List<MinuciaParcial> dm_minucia_t;
@@ -60,9 +60,9 @@ namespace kernel
             return listaNueva;
         }
 
-        public TransformacionT(ParejaMinuciaNormalizada[] vectorParejas)
+        public TransformacionT(ParejaMinuciaNormalizada inicial, ParejaMinuciaNormalizada[] vectorParejas)
         {
-            inicial = vectorParejas[0];
+            this.inicial = inicial;
 
             difx = inicial.pm.minucia2.x - inicial.pm.minucia1.x;
             dify = inicial.pm.minucia2.y - inicial.pm.minucia1.y;
@@ -83,14 +83,28 @@ namespace kernel
             for (int k = 0; k < vectorParejas.Length; k++)
             {
 
-                double nx = (double)vectorParejas[k].pm.minucia1.x * Math.Cos(difa) + 
-                            (double)vectorParejas[k].pm.minucia1.y * Math.Sin(difa) + difx;
-                double ny = (double)vectorParejas[k].pm.minucia1.x * -Math.Sin(difa) + 
-                            (double)vectorParejas[k].pm.minucia1.y * Math.Cos(difa) + dify;
+                Minucia minucia1 = vectorParejas[k].pm.minucia1;
+                Minucia minucia2 = vectorParejas[k].pm.minucia2;
+                /*
+                double nx = (double)minucia1.x * Math.Cos(difa) + 
+                            (double)minucia1.y * Math.Sin(difa) + difx;
+                double ny = (double)minucia1.x * -Math.Sin(difa) + 
+                            (double)minucia1.y * Math.Cos(difa) + dify;
 
-                int x2 = vectorParejas[k].pm.minucia2.x;
-                int y2 = vectorParejas[k].pm.minucia2.y;
+                double nx = (double)minucia1.x * Math.Cos(difa) -
+                            (double)minucia1.y * Math.Sin(difa) + difx;
+                double ny = (double)minucia1.x * Math.Sin(difa) +
+                            (double)minucia1.y * Math.Cos(difa) + dify;
 
+                */
+                
+                double nx = (double)minucia1.x + difx;
+                double ny = (double)minucia1.y + dify;
+
+                int x2 = minucia2.x;
+                int y2 = minucia2.y;
+
+                // la minucia 1 está trasladada y la minucia 2 está normal
                 parejas[k] = new ParAlineado(vectorParejas[k].pm.minucia1, (int)nx, (int)ny, 
                                              vectorParejas[k].pm.minucia2, x2, y2);
             }

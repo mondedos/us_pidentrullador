@@ -7,23 +7,19 @@ namespace kernel
 {
     public class Atributos
     {
-        public int radioCirculo;
-
-        //colores de minucias
         public Color colorTerminacionFiable;
         public Color colorTerminacionPocoFiable;
-
         public Color colorBifurcacionFiable;
         public Color colorBifurcacionPocoFiable;
-
         public Color colorMinuciaNoFiable;
         public Color colorLinea;
         public Color colorPixelCercano;
         public Color colorCirculo;
         public Color colorCruz;
-
         public Brush colorRellenoFinPixelCercano;
+        public int radioCirculo;
 
+        public byte umbralBinarizacion;
         public int minPasosAntesDeBuscarPunto;
         public int longitudLinea;
         public int maxLongitudBuqueda;

@@ -11,6 +11,9 @@ namespace kernel
         List<Minucia> minucias2;
         List<ParejaMinucia> parejasMinucias;
 
+        public Minucia minuciaMasFiable1;
+        public Minucia minuciaMasFiable2;
+
         /// <summary>
         ///  Número de minucias en la huella1 y en la huella2
         /// </summary>
@@ -32,6 +35,8 @@ namespace kernel
 
         // Lista final de correspondencias obtenidas entre huellas
         public List<Correspondencia> correspondencias;
+
+        public TransformacionT transformacionT;
 
         public GreedyMatch(List<Minucia> minucias1, List<Minucia> minucias2, List<ParejaMinucia> parejasMinucias)
         {
@@ -98,19 +103,66 @@ namespace kernel
         void generarCorrespondenciasEnOrden()
         {
             Atributos atr = Atributos.getInstance();
-
+            
             //las que tienen una rotación relativa mayor que un umbral las desechamos
             foreach (ParejaMinuciaNormalizada pmn in normalizadas)
                 if (pmn.pm.rotacionRelativa > atr.umbralAngulo)
                     pmn.sn = 0;
-
+            
             vectorParejas = normalizadas.ToArray();
             Array.Sort(vectorParejas);
             Array.Reverse(vectorParejas);
 
-            TransformacionT trans = new TransformacionT(vectorParejas);
-            this.inicial = trans.inicial;
-            this.parejas = trans.parejas;
+            this.inicial = buscarParejaInicial(vectorParejas);
+
+            minuciaMasFiable1 = inicial.pm.minucia1;
+            minuciaMasFiable2 = inicial.pm.minucia2;
+
+            transformacionT = new TransformacionT(inicial, vectorParejas);
+            this.parejas = transformacionT.parejas;
+        }
+
+        ParejaMinuciaNormalizada buscarParejaInicial(ParejaMinuciaNormalizada[] vectorParejas)
+        {
+            ParejaMinuciaNormalizada tmp = null;
+
+            double maximo = -1;
+
+            // localizamos el mayor sn
+            for (int i = 0; i < vectorParejas.Length; i++)
+            {
+                if (vectorParejas[i].sn >= maximo)
+                    maximo = vectorParejas[i].sn;
+            }
+
+            List<ParejaMinuciaNormalizada> listaPm = new List<ParejaMinuciaNormalizada>();
+
+            // Buscamos las parejas que comparten dicho sn, es decir, las que empatan arriba
+            for (int i = 0; i < vectorParejas.Length; i++)
+            {
+                if (vectorParejas[i].sn == maximo)
+                    listaPm.Add(vectorParejas[i]);
+            }
+
+            bool flag = false;
+
+            // De dicha lista intentamos devolver una pareja que sea fiable, si no pues uno de los encontrados
+            foreach (ParejaMinuciaNormalizada pmn in listaPm)
+            {
+                if (pmn.pm.minucia1.fiabilidad == Minucia.Fiable &&
+                    pmn.pm.minucia2.fiabilidad == Minucia.Fiable)
+                {
+                    tmp = pmn;
+                    flag = true;        
+                    break;
+                }
+            }
+
+            // En caso contrario devolvemos uno cualquiera
+            if (!flag)
+                tmp = listaPm.ToArray()[0];
+
+            return tmp;
         }
 
         void algoritmo()

@@ -21,22 +21,26 @@ namespace kernel
         /// <summary>
         /// Estos atributos se utilizan para indexar los pasos
         /// </summary>
-        public static int busquedaTerminaciones = 0;
-        public static int compruebaTerminaciones = 1;
-        public static int guardaTerminaciones = 2;
+        /// 
+        public static int pasoOrigen = 0;
+        public static int busquedaTerminaciones = 1;
+        public static int compruebaTerminaciones = 2;
+        public static int guardaTerminaciones = 3;
 
-        public static int busquedaBifurcaciones = 3;
-        public static int compruebaBifurcaciones = 4;
-        public static int guardaBifurcaciones = 5;
+        public static int busquedaBifurcaciones = 4;
+        public static int compruebaBifurcaciones = 5;
+        public static int guardaBifurcaciones = 6;
 
-        public static int muestraTodasMinucias = 6;
-        public static int muestraDatosTextura = 7;
-        public static int muestraDatosMinucia = 8;
+        public static int muestraTodasMinucias = 7;
+        public static int muestraDatosTextura = 8;
+        public static int muestraDatosMinucia = 9;
 
-        public static int totalPasos = 9;
+        public static int totalPasos = 10;
 
+        /*
         // Su tamaño es totalPasos + 1
         public static String [] textoPasos = new String[]{ 
+            "Huella original",
             "Comprobar terminaciones",
             "Chequear terminaciones fiables",
             "Mostrar terminaciones fiables",
@@ -48,6 +52,22 @@ namespace kernel
             "Mostrar datos relativos al descriptor de minucia",
             "Mostrar correspondencias de minucias fiables"
         };
+         */
+
+        public static String[] textoPasos = new String[]{
+			"Huella original. Como se observa, ha de estar perfectamente realzada y adelgazada antes de iniciar los algoritmos principales.",
+			"Búsqueda las minucias terminaciones. Una terminación es aquel punto que se encuentra al final de una línea de la huella.",
+			"Terminaciones fiables encontradas. Una terminación es fiable si la prolongación del punto y la de dos líneas vecinas es lo suficientemente larga como para ser relevante.",
+			"Del conjunto de todas las terminaciones se muestran todas aquellas que han pasado el proceso de fiabilidad. Éstas serán más importantes en los algoritmos futuros.",
+			"Búsqueda minucias bifurcaciones. Una bifurcación es aquel punto en el que se duplica una línea de la huella.",
+			"Bifurcaciones fiables encontradas. Una bifurcación es fiable si las tres prolongaciones del punto y la de dos líneas vecinas es lo suficientemente larga como para ser relevante.",
+			"Del conjunto de todas las bifurcaciones se muestran todas aquellas que han pasado el proceso de fiabilidad. Éstas serán más importantes en los algoritmos futuros.",
+			"Resultado final del proceso de búsqueda de minucias para la huella dada. Se guardan para su posterior análisis las terminaciones y las bifurcaciones halladas, así como su grado de fiabilidad.",
+			"Cálculo de los descriptores de textura. Ofrecen información sobre la minucia con respecto a la situación de los puntos que la rodean.",
+			"Cálculo de los descriptores de minucia. Ofrecen información sobre la minucia con respecto a su grado de relación con sus minucias vecinas.",
+            "Búsqueda del par de minucias ajenas cuyo descriptor normalizado es más alto. A partir de ahora se buscaran encajes aplicando la Transformación T con respecto al par hallado.",
+			"Obtención de correspondencias. Una vez aplicados los algoritmos principales en base a los descriptores calculados, establecemos las correspondencias encontradas entre ambas huellas."
+		};
 
         List<TerminacionPotencial> terminacionesPotenciales = new List<TerminacionPotencial>();
         List<BifurcacionPotencial> bifurcacionesPotenciales = new List<BifurcacionPotencial>();
@@ -81,6 +101,8 @@ namespace kernel
             m.matriz = this.matriz;
             m.filas = this.filas;
             m.cols = this.cols;
+
+            this.pasos[pasoOrigen] = huella;
 
             buscarTerminaciones();
             comprobarTerminaciones();
@@ -752,7 +774,7 @@ namespace kernel
             return seEncuentra;
         }
 
-        bool seEncuentraEnLista(List<int> lista, int num)
+        public static bool seEncuentraEnLista(List<int> lista, int num)
         {
             bool seEncuentra = false;
 

@@ -77,7 +77,7 @@ namespace kernel
 
         public override string ToString()
         {
-            return "<" + indice + ":" + x + "," + y + ">";
+            return "M<" + Funcion.intBien(indice) + ">" + ": (" + Funcion.intBien(x) + "," + Funcion.intBien(y) + ")";
         }
     }
 }

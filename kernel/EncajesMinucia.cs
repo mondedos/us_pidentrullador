@@ -94,7 +94,7 @@ namespace kernel
         {
             Atributos atr = Atributos.getInstance();
 
-            double maxDistancia = atr.maxDistancia * atr.radioVecinos;
+            double maxDistancia = ((double)atr.maxDistancia/(double)100) * atr.radioVecinos;
             double distancia = Funcion.distancia(mp.minuciaCentral.x, mp.minuciaCentral.y, mp.minucia.x, mp.minucia.y);
 
             return distancia > maxDistancia;
